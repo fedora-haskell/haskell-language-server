@@ -233,6 +233,20 @@ BuildRequires:  ghc-prettyprinter-devel
 BuildRequires:  ghc-syb-devel
 #BuildRequires:  ghc-unagi-chan-devel
 # End cabal-rpm deps
+# more missing subdeps
+BuildRequires:  ghc-HsYAML-devel
+BuildRequires:  ghc-MonadRandom-devel
+BuildRequires:  ghc-constraints-devel
+BuildRequires:  ghc-filemanip-devel
+BuildRequires:  ghc-hashtables-devel
+BuildRequires:  ghc-haskell-src-exts-devel
+BuildRequires:  ghc-indexed-profunctors-devel
+BuildRequires:  ghc-microlens-devel
+BuildRequires:  ghc-microlens-th-devel
+BuildRequires:  ghc-monad-control-devel
+BuildRequires:  ghc-psqueues-devel
+BuildRequires:  ghc-type-equality-devel
+
 Recommends: ghc = %{ghc_version}
 Recommends: cabal-install
 Recommends: stack
