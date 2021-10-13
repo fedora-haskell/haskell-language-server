@@ -233,6 +233,9 @@ BuildRequires:  ghc-prettyprinter-devel
 BuildRequires:  ghc-syb-devel
 #BuildRequires:  ghc-unagi-chan-devel
 # End cabal-rpm deps
+Recommends: ghc = %{ghc_version}
+Recommends: cabal-install
+Recommends: stack
 
 %description
 The official Haskell language server (LSP) implementation.
