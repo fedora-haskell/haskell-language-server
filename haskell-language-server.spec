@@ -22,6 +22,8 @@ Url:            https://hackage.haskell.org/package/%{name}
 # Begin cabal-rpm sources:
 Source0:        https://hackage.haskell.org/package/%{pkgver}/%{pkgver}.tar.gz
 # End cabal-rpm sources
+# dependent-sum-template needs th-abstraction-0.4 (f34)
+Patch0:         haskell-language-server-th-abstraction.patch
 
 # Begin cabal-rpm deps:
 BuildRequires:  ghc-Cabal-devel
@@ -262,6 +264,9 @@ The official Haskell language server (LSP) implementation.
 # Begin cabal-rpm setup:
 %setup -q
 # End cabal-rpm setup
+%if 0%{?fedora} < 35
+%patch0 -p1 -b .orig
+%endif
 
 
 %build
