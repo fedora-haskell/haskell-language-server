@@ -107,7 +107,8 @@ BuildRequires:  ghc-haddock-library-devel
 #BuildRequires:  ghc-lsp-test-devel
 #BuildRequires:  ghc-lsp-types-devel
 %if 0%{?fedora} >= 35
-BuildRequires:  ghc-monoid-subclasses-devel
+# dropped from hadolint-2.7.0-1
+#BuildRequires:  ghc-monoid-subclasses-devel
 %endif
 BuildRequires:  ghc-network-uri-devel
 #BuildRequires:  ghc-opentelemetry-devel
