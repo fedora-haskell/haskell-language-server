@@ -13,8 +13,8 @@
 %global pkgver %{pkg_name}-%{version}
 
 Name:           %{pkg_name}
-Version:        1.5.1.0
-Release:        1
+Version:        1.6.0.0
+Release:        1%{?dist}
 Summary:        LSP server for GHC
 
 License:        ASL 2.0
@@ -22,8 +22,6 @@ Url:            https://hackage.haskell.org/package/%{name}
 # Begin cabal-rpm sources:
 Source0:        https://hackage.haskell.org/package/%{pkgver}/%{pkgver}.tar.gz
 # End cabal-rpm sources
-# dependent-sum-template needs th-abstraction-0.4 (f34)
-Patch0:         haskell-language-server-th-abstraction.patch
 
 # Begin cabal-rpm deps:
 BuildRequires:  ghc-Cabal-devel
@@ -43,14 +41,15 @@ BuildRequires:  ghc-directory-devel
 BuildRequires:  ghc-extra-devel
 BuildRequires:  ghc-filepath-devel
 BuildRequires:  ghc-ghc-devel
-#BuildRequires:  ghc-ghc-api-compat-devel
 BuildRequires:  ghc-ghc-boot-th-devel
 BuildRequires:  ghc-ghc-paths-devel
 #BuildRequires:  ghc-ghcide-devel
+BuildRequires:  ghc-githash-devel
 BuildRequires:  ghc-gitrev-devel
 BuildRequires:  ghc-hashable-devel
 #BuildRequires:  ghc-hie-bios-devel
 #BuildRequires:  ghc-hiedb-devel
+#BuildRequires:  ghc-hls-alternate-number-format-plugin-devel
 #BuildRequires:  ghc-hls-brittany-plugin-devel
 #BuildRequires:  ghc-hls-call-hierarchy-plugin-devel
 #BuildRequires:  ghc-hls-class-plugin-devel
@@ -65,8 +64,10 @@ BuildRequires:  ghc-hashable-devel
 #BuildRequires:  ghc-hls-ormolu-plugin-devel
 #BuildRequires:  ghc-hls-plugin-api-devel
 #BuildRequires:  ghc-hls-pragmas-plugin-devel
+#BuildRequires:  ghc-hls-qualify-imported-names-plugin-devel
 #BuildRequires:  ghc-hls-refine-imports-plugin-devel
 #BuildRequires:  ghc-hls-retrie-plugin-devel
+#BuildRequires:  ghc-hls-selection-range-plugin-devel
 #BuildRequires:  ghc-hls-splice-plugin-devel
 #BuildRequires:  ghc-hls-stylish-haskell-plugin-devel
 #BuildRequires:  ghc-hls-tactics-plugin-devel
@@ -80,6 +81,7 @@ BuildRequires:  ghc-process-devel
 BuildRequires:  ghc-regex-tdfa-devel
 BuildRequires:  ghc-safe-exceptions-devel
 #BuildRequires:  ghc-sqlite-simple-devel
+BuildRequires:  ghc-stm-devel
 BuildRequires:  ghc-temporary-devel
 BuildRequires:  ghc-text-devel
 BuildRequires:  ghc-transformers-devel
@@ -89,12 +91,13 @@ BuildRequires:  cabal-install > 1.18
 BuildRequires:  ghc-Diff-devel
 BuildRequires:  ghc-Glob-devel
 BuildRequires:  ghc-array-devel
-#BuildRequires:  ghc-bytestring-encoding-devel
 BuildRequires:  ghc-case-insensitive-devel
 #BuildRequires:  ghc-dependent-map-devel
 #BuildRequires:  ghc-dependent-sum-devel
 BuildRequires:  ghc-dlist-devel
+BuildRequires:  ghc-exceptions-devel
 BuildRequires:  ghc-fingertree-devel
+#BuildRequires:  ghc-focus-devel
 #BuildRequires:  ghc-fuzzy-devel
 BuildRequires:  ghc-ghc-boot-devel
 #BuildRequires:  ghc-ghc-check-devel
@@ -104,6 +107,7 @@ BuildRequires:  ghc-haddock-library-devel
 #BuildRequires:  ghc-heapsize-devel
 #BuildRequires:  ghc-hie-compat-devel
 #BuildRequires:  ghc-implicit-hie-cradle-devel
+#BuildRequires:  ghc-list-t-devel
 #BuildRequires:  ghc-lsp-test-devel
 #BuildRequires:  ghc-lsp-types-devel
 %if 0%{?fedora} >= 35
@@ -115,14 +119,15 @@ BuildRequires:  ghc-network-uri-devel
 BuildRequires:  ghc-parallel-devel
 BuildRequires:  ghc-prettyprinter-devel
 BuildRequires:  ghc-prettyprinter-ansi-terminal-devel
+BuildRequires:  ghc-random-devel
 #BuildRequires:  ghc-retrie-devel
-BuildRequires:  ghc-logict-devel
 #BuildRequires:  ghc-rope-utf16-splay-devel
 BuildRequires:  ghc-safe-devel
 BuildRequires:  ghc-shake-devel
 #BuildRequires:  ghc-sorted-list-devel
-BuildRequires:  ghc-stm-devel
+#BuildRequires:  ghc-stm-containers-devel
 BuildRequires:  ghc-syb-devel
+BuildRequires:  ghc-tasty-hunit-devel
 BuildRequires:  ghc-time-devel
 BuildRequires:  ghc-unix-devel
 BuildRequires:  ghc-unliftio-devel
@@ -147,12 +152,21 @@ BuildRequires:  ghc-array-devel
 BuildRequires:  ghc-lucid-devel
 BuildRequires:  ghc-terminal-size-devel
 # for missing dep 'hls-graph':
-BuildRequires:  ghc-shake-devel
+BuildRequires:  ghc-exceptions-devel
+#BuildRequires:  ghc-focus-devel
+BuildRequires:  ghc-js-dgtable-devel
+BuildRequires:  ghc-js-flot-devel
+BuildRequires:  ghc-js-jquery-devel
+#BuildRequires:  ghc-list-t-devel
+BuildRequires:  ghc-primitive-devel
+#BuildRequires:  ghc-stm-containers-devel
+BuildRequires:  ghc-time-devel
 # for missing dep 'hls-plugin-api':
 BuildRequires:  ghc-Diff-devel
 #BuildRequires:  ghc-dependent-map-devel
 #BuildRequires:  ghc-dependent-sum-devel
 BuildRequires:  ghc-dlist-devel
+BuildRequires:  ghc-lens-aeson-devel
 #BuildRequires:  ghc-opentelemetry-devel
 BuildRequires:  ghc-unix-devel
 # for missing dep 'lsp':
@@ -163,7 +177,6 @@ BuildRequires:  ghc-network-uri-devel
 BuildRequires:  ghc-random-devel
 BuildRequires:  ghc-scientific-devel
 #BuildRequires:  ghc-sorted-list-devel
-BuildRequires:  ghc-stm-devel
 BuildRequires:  ghc-time-devel
 BuildRequires:  ghc-unliftio-core-devel
 BuildRequires:  ghc-uuid-devel
@@ -176,6 +189,9 @@ BuildRequires:  ghc-blaze-textual-devel
 BuildRequires:  ghc-semigroups-devel
 BuildRequires:  ghc-template-haskell-devel
 BuildRequires:  ghc-time-devel
+# for missing dep 'hls-alternate-number-format-plugin':
+#BuildRequires:  ghc-hie-compat-devel
+BuildRequires:  ghc-syb-devel
 # for missing dep 'hls-brittany-plugin':
 #BuildRequires:  ghc-brittany-devel
 #BuildRequires:  ghc-czipwith-devel
@@ -212,9 +228,13 @@ BuildRequires:  ghc-hlint-devel
 BuildRequires:  ghc-ormolu-devel
 # for missing dep 'hls-pragmas-plugin':
 #BuildRequires:  ghc-fuzzy-devel
+# for missing dep 'hls-qualify-imported-names-plugin':
+BuildRequires:  ghc-dlist-devel
 # for missing dep 'hls-retrie-plugin':
 #BuildRequires:  ghc-lsp-types-devel
 #BuildRequires:  ghc-retrie-devel
+# for missing dep 'hls-selection-range-plugin':
+#BuildRequires:  ghc-semigroupoids-devel
 # for missing dep 'hls-splice-plugin':
 BuildRequires:  ghc-dlist-devel
 BuildRequires:  ghc-foldl-devel
@@ -260,14 +280,14 @@ Recommends: stack
 %description
 The official Haskell language server (LSP) implementation.
 
+Please see the README on GitHub at
+<https://github.com/haskell/haskell-language-server#readme>.
+
 
 %prep
 # Begin cabal-rpm setup:
 %setup -q
 # End cabal-rpm setup
-%if 0%{?fedora} < 35
-%patch0 -p1 -b .orig
-%endif
 
 
 %build
@@ -284,7 +304,7 @@ cabal install
 # Begin cabal-rpm install
 mkdir -p %{buildroot}%{_bindir}
 %if 0%{?fedora} >= 33 || 0%{?rhel} > 8
-cabal install --install-method=copy --installdir=%{buildroot}%{_bindir}
+cabal install --install-method=copy --enable-executable-stripping --installdir=%{buildroot}%{_bindir}
 %else
 for i in .cabal-sandbox/bin/*; do
 strip -s -o %{buildroot}%{_bindir}/$(basename $i) $i
