@@ -13,7 +13,7 @@
 %global pkgver %{pkg_name}-%{version}
 
 Name:           %{pkg_name}
-Version:        1.6.0.0
+Version:        1.6.1.0
 Release:        1%{?dist}
 Summary:        LSP server for GHC
 
@@ -328,6 +328,9 @@ mkdir -p %{buildroot}%{_datadir}/bash-completion/completions/
 
 
 %changelog
+* Mon Jan 31 2022 Jens Petersen <petersen@redhat.com> - 1.6.1.0-1
+- https://hackage.haskell.org/package/haskell-language-server-1.6.1.0/changelog
+
 * Tue Nov 30 2021 Jens Petersen <petersen@redhat.com> - 1.5.1.0-1
 - https://hackage.haskell.org/package/haskell-language-server-1.5.1.0/changelog
 
