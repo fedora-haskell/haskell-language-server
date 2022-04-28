@@ -13,7 +13,7 @@
 %global pkgver %{pkg_name}-%{version}
 
 Name:           %{pkg_name}
-Version:        1.6.1.0
+Version:        1.7.0.0
 Release:        1%{?dist}
 Summary:        LSP server for GHC
 
@@ -52,6 +52,7 @@ BuildRequires:  ghc-hashable-devel
 #BuildRequires:  ghc-hls-alternate-number-format-plugin-devel
 #BuildRequires:  ghc-hls-brittany-plugin-devel
 #BuildRequires:  ghc-hls-call-hierarchy-plugin-devel
+#BuildRequires:  ghc-hls-change-type-signature-plugin-devel
 #BuildRequires:  ghc-hls-class-plugin-devel
 #BuildRequires:  ghc-hls-eval-plugin-devel
 #BuildRequires:  ghc-hls-explicit-imports-plugin-devel
@@ -66,17 +67,18 @@ BuildRequires:  ghc-hashable-devel
 #BuildRequires:  ghc-hls-pragmas-plugin-devel
 #BuildRequires:  ghc-hls-qualify-imported-names-plugin-devel
 #BuildRequires:  ghc-hls-refine-imports-plugin-devel
+#BuildRequires:  ghc-hls-rename-plugin-devel
 #BuildRequires:  ghc-hls-retrie-plugin-devel
 #BuildRequires:  ghc-hls-selection-range-plugin-devel
 #BuildRequires:  ghc-hls-splice-plugin-devel
 #BuildRequires:  ghc-hls-stylish-haskell-plugin-devel
 #BuildRequires:  ghc-hls-tactics-plugin-devel
-BuildRequires:  ghc-hslogger-devel
 BuildRequires:  ghc-lens-devel
 #BuildRequires:  ghc-lsp-devel
 BuildRequires:  ghc-mtl-devel
 BuildRequires:  ghc-optparse-applicative-devel
 BuildRequires:  ghc-optparse-simple-devel
+BuildRequires:  ghc-prettyprinter-devel
 BuildRequires:  ghc-process-devel
 BuildRequires:  ghc-regex-tdfa-devel
 BuildRequires:  ghc-safe-exceptions-devel
@@ -85,6 +87,7 @@ BuildRequires:  ghc-stm-devel
 BuildRequires:  ghc-temporary-devel
 BuildRequires:  ghc-text-devel
 BuildRequires:  ghc-transformers-devel
+BuildRequires:  ghc-unix-devel
 BuildRequires:  ghc-unordered-containers-devel
 BuildRequires:  cabal-install > 1.18
 # for missing dep 'ghcide':
@@ -95,10 +98,10 @@ BuildRequires:  ghc-case-insensitive-devel
 #BuildRequires:  ghc-dependent-map-devel
 #BuildRequires:  ghc-dependent-sum-devel
 BuildRequires:  ghc-dlist-devel
+#BuildRequires:  ghc-enummapset-devel
 BuildRequires:  ghc-exceptions-devel
 BuildRequires:  ghc-fingertree-devel
 #BuildRequires:  ghc-focus-devel
-#BuildRequires:  ghc-fuzzy-devel
 BuildRequires:  ghc-ghc-boot-devel
 #BuildRequires:  ghc-ghc-check-devel
 #BuildRequires:  ghc-ghc-exactprint-devel
@@ -106,18 +109,18 @@ BuildRequires:  ghc-ghc-boot-devel
 BuildRequires:  ghc-haddock-library-devel
 #BuildRequires:  ghc-heapsize-devel
 #BuildRequires:  ghc-hie-compat-devel
+BuildRequires:  ghc-hslogger-devel
 #BuildRequires:  ghc-implicit-hie-cradle-devel
 #BuildRequires:  ghc-list-t-devel
 #BuildRequires:  ghc-lsp-test-devel
 #BuildRequires:  ghc-lsp-types-devel
 %if 0%{?fedora} >= 35
 # dropped from hadolint-2.7.0-1
-#BuildRequires:  ghc-monoid-subclasses-devel
+BuildRequires:  ghc-monoid-subclasses-devel
 %endif
 BuildRequires:  ghc-network-uri-devel
 #BuildRequires:  ghc-opentelemetry-devel
 BuildRequires:  ghc-parallel-devel
-BuildRequires:  ghc-prettyprinter-devel
 BuildRequires:  ghc-prettyprinter-ansi-terminal-devel
 BuildRequires:  ghc-random-devel
 #BuildRequires:  ghc-retrie-devel
@@ -129,7 +132,6 @@ BuildRequires:  ghc-shake-devel
 BuildRequires:  ghc-syb-devel
 BuildRequires:  ghc-tasty-hunit-devel
 BuildRequires:  ghc-time-devel
-BuildRequires:  ghc-unix-devel
 BuildRequires:  ghc-unliftio-devel
 BuildRequires:  ghc-unliftio-core-devel
 BuildRequires:  ghc-utf8-string-devel
@@ -140,6 +142,7 @@ BuildRequires:  ghc-conduit-devel
 BuildRequires:  ghc-conduit-extra-devel
 BuildRequires:  ghc-exceptions-devel
 BuildRequires:  ghc-file-embed-devel
+BuildRequires:  ghc-hslogger-devel
 BuildRequires:  ghc-time-devel
 BuildRequires:  ghc-unix-compat-devel
 BuildRequires:  ghc-vector-devel
@@ -168,10 +171,10 @@ BuildRequires:  ghc-Diff-devel
 BuildRequires:  ghc-dlist-devel
 BuildRequires:  ghc-lens-aeson-devel
 #BuildRequires:  ghc-opentelemetry-devel
-BuildRequires:  ghc-unix-devel
 # for missing dep 'lsp':
 BuildRequires:  ghc-attoparsec-devel
 #BuildRequires:  ghc-dependent-map-devel
+BuildRequires:  ghc-hslogger-devel
 #BuildRequires:  ghc-lsp-types-devel
 BuildRequires:  ghc-network-uri-devel
 BuildRequires:  ghc-random-devel
@@ -197,6 +200,9 @@ BuildRequires:  ghc-syb-devel
 #BuildRequires:  ghc-czipwith-devel
 #BuildRequires:  ghc-ghc-exactprint-devel
 #BuildRequires:  ghc-lsp-types-devel
+# for missing dep 'hls-change-type-signature-plugin':
+#BuildRequires:  ghc-lsp-types-devel
+BuildRequires:  ghc-syb-devel
 # for missing dep 'hls-class-plugin':
 #BuildRequires:  ghc-ghc-exactprint-devel
 # for missing dep 'hls-eval-plugin':
@@ -214,6 +220,7 @@ BuildRequires:  ghc-unliftio-devel
 #BuildRequires:  ghc-lsp-types-devel
 # for missing dep 'hls-fourmolu-plugin':
 #BuildRequires:  ghc-fourmolu-devel
+#BuildRequires:  ghc-process-extras-devel
 # for missing dep 'hls-haddock-comments-plugin':
 #BuildRequires:  ghc-ghc-exactprint-devel
 #BuildRequires:  ghc-lsp-types-devel
@@ -224,12 +231,19 @@ BuildRequires:  ghc-Diff-devel
 #BuildRequires:  ghc-ghc-lib-devel
 BuildRequires:  ghc-ghc-lib-parser-ex-devel
 BuildRequires:  ghc-hlint-devel
+BuildRequires:  ghc-hslogger-devel
+BuildRequires:  ghc-refact-devel
 # for missing dep 'hls-ormolu-plugin':
 BuildRequires:  ghc-ormolu-devel
 # for missing dep 'hls-pragmas-plugin':
 #BuildRequires:  ghc-fuzzy-devel
 # for missing dep 'hls-qualify-imported-names-plugin':
 BuildRequires:  ghc-dlist-devel
+# for missing dep 'hls-rename-plugin':
+#BuildRequires:  ghc-ghc-exactprint-devel
+#BuildRequires:  ghc-lsp-types-devel
+#BuildRequires:  ghc-mod-devel
+BuildRequires:  ghc-syb-devel
 # for missing dep 'hls-retrie-plugin':
 #BuildRequires:  ghc-lsp-types-devel
 #BuildRequires:  ghc-retrie-devel
@@ -253,7 +267,6 @@ BuildRequires:  ghc-fingertree-devel
 #BuildRequires:  ghc-hyphenation-devel
 BuildRequires:  ghc-megaparsec-devel
 BuildRequires:  ghc-parser-combinators-devel
-BuildRequires:  ghc-prettyprinter-devel
 #BuildRequires:  ghc-refinery-devel
 #BuildRequires:  ghc-retrie-devel
 BuildRequires:  ghc-syb-devel
@@ -273,7 +286,9 @@ BuildRequires:  ghc-monad-control-devel
 BuildRequires:  ghc-psqueues-devel
 BuildRequires:  ghc-type-equality-devel
 
+%if %{defined ghc_version}
 Recommends: ghc = %{ghc_version}
+%endif
 Recommends: cabal-install
 Recommends: stack
 
@@ -328,6 +343,9 @@ mkdir -p %{buildroot}%{_datadir}/bash-completion/completions/
 
 
 %changelog
+* Thu Apr 28 2022 Jens Petersen <petersen@redhat.com> - 1.7.0.0-1
+- https://hackage.haskell.org/package/haskell-language-server-1.7.0.0/changelog
+
 * Mon Jan 31 2022 Jens Petersen <petersen@redhat.com> - 1.6.1.0-1
 - https://hackage.haskell.org/package/haskell-language-server-1.6.1.0/changelog
 
