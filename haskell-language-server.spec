@@ -303,6 +303,7 @@ Please see the README on GitHub at
 # Begin cabal-rpm setup:
 %setup -q
 # End cabal-rpm setup
+cabal-tweak-flag dynamic False
 
 
 %build
@@ -348,6 +349,7 @@ mkdir -p %{buildroot}%{_datadir}/bash-completion/completions/
 
 * Mon Jan 31 2022 Jens Petersen <petersen@redhat.com> - 1.6.1.0-1
 - https://hackage.haskell.org/package/haskell-language-server-1.6.1.0/changelog
+- disable dynamic linking
 
 * Tue Nov 30 2021 Jens Petersen <petersen@redhat.com> - 1.5.1.0-1
 - https://hackage.haskell.org/package/haskell-language-server-1.5.1.0/changelog
