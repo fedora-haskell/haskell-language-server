@@ -310,23 +310,13 @@ cabal-tweak-flag dynamic False
 %build
 # Begin cabal-rpm build:
 cabal update
-%if 0%{?rhel} && 0%{?rhel} < 9
-cabal sandbox init
-cabal install
-%endif
 # End cabal-rpm build
 
 
 %install
 # Begin cabal-rpm install
 mkdir -p %{buildroot}%{_bindir}
-%if 0%{?fedora} >= 33 || 0%{?rhel} > 8
 cabal install --install-method=copy --enable-executable-stripping --installdir=%{buildroot}%{_bindir}
-%else
-for i in .cabal-sandbox/bin/*; do
-strip -s -o %{buildroot}%{_bindir}/$(basename $i) $i
-done
-%endif
 mkdir -p %{buildroot}%{_datadir}/bash-completion/completions/
 %{buildroot}%{_bindir}/%{name} --bash-completion-script %{name} | sed s/filenames/default/ > %{buildroot}%{_datadir}/bash-completion/completions/%{name}
 %{buildroot}%{_bindir}/haskell-language-server-wrapper --bash-completion-script haskell-language-server-wrapper | sed s/filenames/default/ > %{buildroot}%{_datadir}/bash-completion/completions/haskell-language-server-wrapper
