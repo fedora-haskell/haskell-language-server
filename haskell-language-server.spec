@@ -22,6 +22,7 @@ Url:            https://hackage.haskell.org/package/%{name}
 # Begin cabal-rpm sources:
 Source0:        https://hackage.haskell.org/package/%{pkgver}/%{pkgver}.tar.gz
 # End cabal-rpm sources
+Patch0:         haskell-language-server-1.7.0.0-prettyprinter-1.7.patch
 
 # Begin cabal-rpm deps:
 BuildRequires:  ghc-Cabal-devel
@@ -301,7 +302,7 @@ Please see the README on GitHub at
 
 %prep
 # Begin cabal-rpm setup:
-%setup -q
+%autosetup -p1
 # End cabal-rpm setup
 cabal-tweak-flag dynamic False
 
