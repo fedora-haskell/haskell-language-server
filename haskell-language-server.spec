@@ -317,9 +317,6 @@ cabal update
 # Begin cabal-rpm install
 mkdir -p %{buildroot}%{_bindir}
 cabal install --install-method=copy --enable-executable-stripping --installdir=%{buildroot}%{_bindir}
-mkdir -p %{buildroot}%{_datadir}/bash-completion/completions/
-%{buildroot}%{_bindir}/%{name} --bash-completion-script %{name} | sed s/filenames/default/ > %{buildroot}%{_datadir}/bash-completion/completions/%{name}
-%{buildroot}%{_bindir}/haskell-language-server-wrapper --bash-completion-script haskell-language-server-wrapper | sed s/filenames/default/ > %{buildroot}%{_datadir}/bash-completion/completions/haskell-language-server-wrapper
 # End cabal-rpm install
 
 
@@ -329,8 +326,6 @@ mkdir -p %{buildroot}%{_datadir}/bash-completion/completions/
 %doc ChangeLog.md README.md
 %{_bindir}/%{name}
 %{_bindir}/haskell-language-server-wrapper
-%{_datadir}/bash-completion/completions/%{name}
-%{_datadir}/bash-completion/completions/haskell-language-server-wrapper
 # End cabal-rpm files
 
 
