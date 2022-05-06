@@ -291,7 +291,7 @@ BuildRequires:  ghc-type-equality-devel
 Recommends: ghc = %{ghc_version}
 %endif
 Recommends: cabal-install
-Recommends: stack
+#Recommends: stack
 
 %description
 The official Haskell language server (LSP) implementation.
