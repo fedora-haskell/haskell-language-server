@@ -22,7 +22,7 @@
 Name:           %{pkg_name}-%{ghc_prefix}
 Version:        1.7.0.0
 Release:        1%{?dist}
-Summary:        LSP server for GHC
+Summary:        Haskell LSP server for GHC
 
 License:        ASL 2.0
 Url:            https://hackage.haskell.org/package/%{pkg_name}
@@ -38,31 +38,22 @@ BuildRequires:  %{ghc_prefix}-compiler-default
 %endif
 BuildRequires:  ghc-rpm-macros
 BuildRequires:  zlib-devel
-
-%description
-The official Haskell language server (LSP) implementation.
-
-
-%if %{defined ghc_version}
-%package -n haskell-language-server-%{ghc_version}
-Summary:    LSP server for GHC
+Recommends: haskell-language-server-wrapper-%{ghc_prefix} = %{version}-%{release}
 Recommends: %{ghc_prefix} = %{ghc_version}
 Recommends: cabal-install
 Recommends: stack
+Obsoletes:  haskell-language-server-8.10.7 <= 1.7.0.0
 
-%description -n haskell-language-server-%{ghc_version}
+%description
 The Haskell language server (LSP) built for GHC %{ghc_version}.
 
 Please see the README on GitHub at
 <https://github.com/haskell/haskell-language-server#readme>.
-%endif
 
 
 %package -n haskell-language-server-wrapper-%{ghc_prefix}
 Summary:    LSP server for GHC
-Recommends: haskell-language-server-%{ghc_version} = %{version}
-Recommends: cabal-install
-Recommends: stack
+Recommends: %{name} = %{version}
 
 %description -n haskell-language-server-wrapper-%{ghc_prefix}
 The Haskell language server (LSP) wrapper built by %{ghc_prefix}.
@@ -94,12 +85,10 @@ cabal install %{!?_with_compiler_default:-w ghc-%{ghc_version}} --install-method
 mv %{buildroot}%{_bindir}/%{pkg_name}{,-%{ghc_version}}
 
 
-%if %{defined ghc_version}
-%files -n haskell-language-server-%{ghc_version}
+%files
 %license LICENSE
 %doc ChangeLog.md README.md
 %{_bindir}/%{pkg_name}-%{ghc_version}
-%endif
 
 
 %files -n haskell-language-server-wrapper-%{ghc_prefix}
