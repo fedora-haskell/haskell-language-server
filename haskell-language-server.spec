@@ -22,6 +22,7 @@ Url:            https://hackage.haskell.org/package/%{name}
 # Begin cabal-rpm sources:
 Source0:        https://hackage.haskell.org/package/%{pkgver}/%{pkgver}.tar.gz
 # End cabal-rpm sources
+Source1:        cabal.project
 Patch0:         haskell-language-server-1.7.0.0-prettyprinter-1.7.patch
 
 # Begin cabal-rpm deps:
@@ -307,6 +308,20 @@ Please see the README on GitHub at
 %autosetup -p1
 # End cabal-rpm setup
 cabal-tweak-flag dynamic False
+%if %{undefined ghc_name}
+cabal-tweak-flag hlint False
+%endif
+cabal unpack hls-qualify-imported-names-plugin-1.0.1.0
+(
+cd hls-qualify-imported-names-plugin-1.0.1.0
+sed -i -e 's/=1.4/=1.5/' -e 's/=1.7/=1.8/' hls-qualify-imported-names-plugin.cabal
+)
+cabal unpack hls-stylish-haskell-plugin-1.0.1.1
+(
+cd hls-stylish-haskell-plugin-1.0.1.1
+sed -i -e 's/=1.4/=1.5/' -e 's/=1.7/=1.8/' hls-stylish-haskell-plugin.cabal
+)
+cp -p %{SOURCE1} .
 
 
 %build
@@ -340,6 +355,9 @@ mkdir -p %{buildroot}%{_datadir}/bash-completion/completions/
 
 
 %changelog
+* Sun Sep 18 2022 Jens Petersen <petersen@redhat.com> - 1.8.0.0-1
+- https://hackage.haskell.org/package/haskell-language-server-1.8.0.0/changelog
+
 * Thu Apr 28 2022 Jens Petersen <petersen@redhat.com> - 1.7.0.0-1
 - https://hackage.haskell.org/package/haskell-language-server-1.7.0.0/changelog
 
