@@ -49,7 +49,9 @@ BuildRequires:  ghc-base16-bytestring-devel
 BuildRequires:  ghc-binary-devel
 BuildRequires:  ghc-bytestring-devel
 BuildRequires:  ghc-containers-devel
+%if %{defined fedora}
 BuildRequires:  ghc-cryptohash-sha1-devel
+%endif
 BuildRequires:  ghc-data-default-devel
 BuildRequires:  ghc-deepseq-devel
 BuildRequires:  ghc-directory-devel
@@ -59,7 +61,9 @@ BuildRequires:  ghc-ghc-devel
 BuildRequires:  ghc-ghc-boot-th-devel
 BuildRequires:  ghc-ghc-paths-devel
 #BuildRequires:  ghc-ghcide-devel
+%if %{defined fedora}
 BuildRequires:  ghc-githash-devel
+%endif
 BuildRequires:  ghc-gitrev-devel
 BuildRequires:  ghc-hashable-devel
 #BuildRequires:  ghc-hie-bios-devel
@@ -92,24 +96,32 @@ BuildRequires:  ghc-hashable-devel
 #BuildRequires:  ghc-hls-stan-plugin-devel
 #BuildRequires:  ghc-hls-stylish-haskell-plugin-devel
 #BuildRequires:  ghc-hls-tactics-plugin-devel
+%if %{defined fedora}
 BuildRequires:  ghc-hslogger-devel
 BuildRequires:  ghc-lens-devel
+%endif
 #BuildRequires:  ghc-lsp-devel
 #BuildRequires:  ghc-lsp-types-devel
 BuildRequires:  ghc-mtl-devel
 BuildRequires:  ghc-optparse-applicative-devel
+%if %{defined fedora}
 BuildRequires:  ghc-optparse-simple-devel
 BuildRequires:  ghc-prettyprinter-devel
+%endif
 BuildRequires:  ghc-process-devel
 BuildRequires:  ghc-regex-tdfa-devel
+%if %{defined fedora}
 BuildRequires:  ghc-safe-exceptions-devel
+%endif
 #BuildRequires:  ghc-sqlite-simple-devel
 BuildRequires:  ghc-stm-devel
 BuildRequires:  ghc-temporary-devel
 BuildRequires:  ghc-text-devel
 BuildRequires:  ghc-transformers-devel
 BuildRequires:  ghc-unix-devel
+%if %{defined fedora}
 BuildRequires:  ghc-unliftio-core-devel
+%endif
 BuildRequires:  ghc-unordered-containers-devel
 # for missing dep 'ghcide':
 BuildRequires:  ghc-Diff-devel
@@ -122,7 +134,9 @@ BuildRequires:  ghc-case-insensitive-devel
 BuildRequires:  ghc-dlist-devel
 #BuildRequires:  ghc-enummapset-devel
 BuildRequires:  ghc-exceptions-devel
+%if %{defined fedora}
 BuildRequires:  ghc-fingertree-devel
+%endif
 #BuildRequires:  ghc-focus-devel
 BuildRequires:  ghc-ghc-boot-devel
 #BuildRequires:  ghc-ghc-check-devel
@@ -132,17 +146,23 @@ BuildRequires:  ghc-haddock-library-devel
 #BuildRequires:  ghc-hie-compat-devel
 #BuildRequires:  ghc-implicit-hie-cradle-devel
 #BuildRequires:  ghc-list-t-devel
+%if %{defined fedora}
 BuildRequires:  ghc-monoid-subclasses-devel
+%endif
 #BuildRequires:  ghc-opentelemetry-devel
 BuildRequires:  ghc-parallel-devel
+%if %{defined fedora}
 BuildRequires:  ghc-prettyprinter-ansi-terminal-devel
+%endif
 BuildRequires:  ghc-random-devel
 #BuildRequires:  ghc-sorted-list-devel
 #BuildRequires:  ghc-stm-containers-devel
 BuildRequires:  ghc-syb-devel
 #BuildRequires:  ghc-text-rope-devel
 BuildRequires:  ghc-time-devel
+%if %{defined fedora}
 BuildRequires:  ghc-unliftio-devel
+%endif
 BuildRequires:  ghc-vector-devel
 # for missing dep 'hie-bios':
 BuildRequires:  ghc-conduit-devel
@@ -158,8 +178,10 @@ BuildRequires:  ghc-yaml-devel
 BuildRequires:  ghc-ansi-terminal-devel
 BuildRequires:  ghc-array-devel
 #BuildRequires:  ghc-hie-compat-devel
+%if %{defined fedora}
 BuildRequires:  ghc-lucid-devel
 BuildRequires:  ghc-terminal-size-devel
+%endif
 # for missing dep 'hls-alternate-number-format-plugin':
 #BuildRequires:  ghc-hie-compat-devel
 BuildRequires:  ghc-syb-devel
@@ -172,17 +194,23 @@ BuildRequires:  ghc-syb-devel
 # for missing dep 'hls-class-plugin':
 #BuildRequires:  ghc-ghc-exactprint-devel
 # for missing dep 'hls-code-range-plugin':
+%if %{defined fedora}
 BuildRequires:  ghc-semigroupoids-devel
+%endif
 BuildRequires:  ghc-vector-devel
 # for missing dep 'hls-eval-plugin':
 BuildRequires:  ghc-Diff-devel
 BuildRequires:  ghc-QuickCheck-devel
 BuildRequires:  ghc-dlist-devel
+%if %{defined fedora}
 BuildRequires:  ghc-megaparsec-devel
 BuildRequires:  ghc-parser-combinators-devel
 BuildRequires:  ghc-pretty-simple-devel
+%endif
 BuildRequires:  ghc-time-devel
+%if %{defined fedora}
 BuildRequires:  ghc-unliftio-devel
+%endif
 # for missing dep 'hls-floskell-plugin':
 #BuildRequires:  ghc-floskell-devel
 # for missing dep 'hls-fourmolu-plugin':
@@ -200,7 +228,9 @@ BuildRequires:  ghc-js-jquery-devel
 BuildRequires:  ghc-primitive-devel
 #BuildRequires:  ghc-stm-containers-devel
 BuildRequires:  ghc-time-devel
+%if %{defined fedora}
 BuildRequires:  ghc-unliftio-devel
+%endif
 # for missing dep 'hls-haddock-comments-plugin':
 #BuildRequires:  ghc-ghc-exactprint-devel
 # for missing dep 'hls-hlint-plugin':
@@ -218,7 +248,9 @@ BuildRequires:  ghc-Diff-devel
 #BuildRequires:  ghc-dependent-map-devel
 #BuildRequires:  ghc-dependent-sum-devel
 BuildRequires:  ghc-dlist-devel
+%if %{defined fedora}
 BuildRequires:  ghc-lens-aeson-devel
+%endif
 #BuildRequires:  ghc-opentelemetry-devel
 # for missing dep 'hls-pragmas-plugin':
 #BuildRequires:  ghc-fuzzy-devel
@@ -240,7 +272,9 @@ BuildRequires:  ghc-syb-devel
 #BuildRequires:  ghc-retrie-devel
 # for missing dep 'hls-splice-plugin':
 BuildRequires:  ghc-dlist-devel
+%if %{defined fedora}
 BuildRequires:  ghc-foldl-devel
+%endif
 #BuildRequires:  ghc-ghc-exactprint-devel
 #BuildRequires:  ghc-retrie-devel
 BuildRequires:  ghc-syb-devel
@@ -249,13 +283,17 @@ BuildRequires:  ghc-syb-devel
 # for missing dep 'hls-stylish-haskell-plugin':
 #BuildRequires:  ghc-stylish-haskell-devel
 # for missing dep 'hls-tactics-plugin':
+%if %{defined fedora}
 BuildRequires:  ghc-fingertree-devel
+%endif
 #BuildRequires:  ghc-generic-lens-devel
 #BuildRequires:  ghc-ghc-exactprint-devel
 #BuildRequires:  ghc-ghc-source-gen-devel
 #BuildRequires:  ghc-hyphenation-devel
+%if %{defined fedora}
 BuildRequires:  ghc-megaparsec-devel
 BuildRequires:  ghc-parser-combinators-devel
+%endif
 #BuildRequires:  ghc-refinery-devel
 #BuildRequires:  ghc-retrie-devel
 BuildRequires:  ghc-syb-devel
@@ -268,14 +306,22 @@ BuildRequires:  ghc-random-devel
 BuildRequires:  ghc-scientific-devel
 #BuildRequires:  ghc-sorted-list-devel
 BuildRequires:  ghc-time-devel
+%if %{defined fedora}
 BuildRequires:  ghc-uuid-devel
+%endif
 # for missing dep 'sqlite-simple':
+%if %{defined fedora}
 BuildRequires:  ghc-Only-devel
+%endif
 BuildRequires:  ghc-attoparsec-devel
 BuildRequires:  ghc-blaze-builder-devel
+%if %{defined fedora}
 BuildRequires:  ghc-blaze-textual-devel
+%endif
 #BuildRequires:  ghc-direct-sqlite-devel
+%if %{defined fedora}
 BuildRequires:  ghc-semigroups-devel
+%endif
 BuildRequires:  ghc-template-haskell-devel
 BuildRequires:  ghc-time-devel
 # for missing dep 'lsp-types':
@@ -289,18 +335,24 @@ BuildRequires:  ghc-template-haskell-devel
 # End cabal-rpm deps
 # more missing subdeps
 BuildRequires:  ghc-HsYAML-devel
+%if %{defined fedora}
 BuildRequires:  ghc-MonadRandom-devel
 BuildRequires:  ghc-constraints-devel
 BuildRequires:  ghc-filemanip-devel
+%endif
 BuildRequires:  ghc-hashtables-devel
+%if %{defined fedora}
 BuildRequires:  ghc-haskell-src-exts-devel
 BuildRequires:  ghc-indexed-profunctors-devel
 BuildRequires:  ghc-logict-devel
 BuildRequires:  ghc-microlens-devel
 BuildRequires:  ghc-microlens-th-devel
+%endif
 BuildRequires:  ghc-monad-control-devel
+%if %{defined fedora}
 BuildRequires:  ghc-psqueues-devel
 BuildRequires:  ghc-type-equality-devel
+%endif
 %endif
 %if %[v"%{ghc_version}" > v"9.2"]
 BuildRequires:  cabal-install > 3.6
