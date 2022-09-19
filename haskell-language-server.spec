@@ -2,7 +2,7 @@
 # https://docs.fedoraproject.org/en-US/packaging-guidelines/Haskell/
 
 #%%global ghc_name ghc9.0
-%bcond_with compiler_default
+%bcond_without compiler_default
 
 %global ghc_prefix %{?ghc_name}%{!?ghc_name:ghc}
 
