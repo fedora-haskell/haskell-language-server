@@ -38,7 +38,7 @@ BuildRequires:  %{ghc_prefix}-compiler-default
 %endif
 BuildRequires:  ghc-rpm-macros
 BuildRequires:  zlib-devel
-Recommends: haskell-language-server-wrapper-%{ghc_prefix} = %{version}-%{release}
+Recommends: haskell-language-server-wrapper = %{version}
 Recommends: %{ghc_prefix} = %{ghc_version}
 Recommends: cabal-install
 Recommends: stack
@@ -46,17 +46,6 @@ Obsoletes:  haskell-language-server-8.10.7 <= 1.7.0.0
 
 %description
 The Haskell language server (LSP) built for GHC %{ghc_version}.
-
-Please see the README on GitHub at
-<https://github.com/haskell/haskell-language-server#readme>.
-
-
-%package -n haskell-language-server-wrapper-%{ghc_prefix}
-Summary:    LSP server for GHC
-Recommends: %{name} = %{version}
-
-%description -n haskell-language-server-wrapper-%{ghc_prefix}
-The Haskell language server (LSP) wrapper built by %{ghc_prefix}.
 
 Please see the README on GitHub at
 <https://github.com/haskell/haskell-language-server#readme>.
@@ -83,18 +72,13 @@ mkdir -p %{buildroot}%{_bindir}
 cabal install %{!?_with_compiler_default:-w ghc-%{ghc_version}} --install-method=copy --enable-executable-stripping --installdir=%{buildroot}%{_bindir}
 # End cabal-rpm install
 mv %{buildroot}%{_bindir}/%{pkg_name}{,-%{ghc_version}}
+rm %{buildroot}%{_bindir}/haskell-language-server-wrapper
 
 
 %files
 %license LICENSE
 %doc ChangeLog.md README.md
 %{_bindir}/%{pkg_name}-%{ghc_version}
-
-
-%files -n haskell-language-server-wrapper-%{ghc_prefix}
-%license LICENSE
-%doc ChangeLog.md README.md
-%{_bindir}/haskell-language-server-wrapper
 
 
 %changelog
