@@ -411,31 +411,19 @@ Please see the README on GitHub at
 %autosetup -p1 -n %{pkgver}
 # End cabal-rpm setup
 cabal-tweak-flag dynamic False
-%if "%{?ghc_name}" != "ghc9.0"
-cabal-tweak-flag hlint False
-%endif
+
 cabal update
-%define qualifyplugin hls-qualify-imported-names-plugin-1.0.1.0
-cabal unpack %{qualifyplugin}
-sed -i -e 's/=1.4/=1.5/' -e 's/=1.7/=1.8/' %{qualifyplugin}/hls-qualify-imported-names-plugin.cabal
 %if %[v"%{ghc_version}" < v"9.2"]
 %define stylishplugin hls-stylish-haskell-plugin-1.0.1.1
 cabal unpack %{stylishplugin}
 sed -i -e 's/=1.4/=1.5/' -e 's/=1.7/=1.8/' %{stylishplugin}/hls-stylish-haskell-plugin.cabal
-echo "packages: . ./%{qualifyplugin} ./%{stylishplugin}" > cabal.project
+echo "packages: . ./%{stylishplugin}" > cabal.project
 %else
 cabal-tweak-flag stylishHaskell False
-echo "packages: . ./%{qualifyplugin}" > cabal.project
+echo "packages: ." > cabal.project
 %endif
-%if %[v"%{ghc_version}" > v"9.4"]
-%define cologcore co-log-core-0.3.1.0
-cabal unpack %{cologcore}
-(
-cd %{cologcore}
-cabal-tweak-dep-ver base '< 4.17' '< 4.18'
-)
-echo "packages: . ./%{qualifyplugin} ./%{cologcore}" > cabal.project
-%endif
+
+echo "constraints: hlint +ghc-lib, ghc-lib-parser-ex -auto, stylish-haskell +ghc-lib" >> cabal.project
 
 
 %build
