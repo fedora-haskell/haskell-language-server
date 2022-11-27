@@ -407,6 +407,10 @@ Please see the README on GitHub at
 # End cabal-rpm setup
 cabal-tweak-flag dynamic False
 
+%if %[v"%{ghc_version}" < v"9.0"]
+cabal-tweak-flag hlint False
+%endif
+
 cabal update
 %if %[v"%{ghc_version}" < v"9.2"]
 %define stylishplugin hls-stylish-haskell-plugin-1.0.1.1
