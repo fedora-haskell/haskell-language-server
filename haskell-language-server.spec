@@ -367,7 +367,9 @@ Requires: haskell-language-server-wrapper = %{version}-%{release}
 %else
 Requires: haskell-language-server-wrapper = %{version}
 %endif
+%if %{defined ghc_version}
 Requires: %{ghc_prefix} = %{ghc_version}
+%endif
 Recommends: cabal-install
 #Recommends: stack
 %if %{defined ghc_name}
