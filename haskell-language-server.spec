@@ -21,7 +21,7 @@
 
 Name:           %{pkg_name}%{?ghc_name:-%{ghc_name}}
 Version:        1.8.0.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        LSP server for GHC %{ghc_version}
 
 License:        ASL 2.0
@@ -380,7 +380,7 @@ Obsoletes: haskell-language-server-%{ghc_name}-8.10.7 < %{version}-%{release}
 Obsoletes: haskell-language-server-8.10.7 < %{version}-%{release}
 %endif
 %else
-Obsoletes: haskell-language-server-%{?ghc-version} < %{version}-%{release}
+Obsoletes: haskell-language-server-%{?ghc_version} < %{version}-%{release}
 %endif
 
 %description
@@ -466,6 +466,9 @@ rm %{buildroot}%{_bindir}/haskell-language-server-wrapper
 
 
 %changelog
+* Tue Nov 29 2022 Jens Petersen <petersen@redhat.com> - 1.8.0.0-4
+- fixup obsoletes correctly using ghc_version
+
 * Mon Nov 28 2022 Jens Petersen <petersen@redhat.com> - 1.8.0.0-3
 - fix obsoletes for haskell-language-server-8.10.*
 
