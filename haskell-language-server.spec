@@ -20,8 +20,8 @@
 %global executable %{pkg_name}-%{ghc_version}
 
 Name:           %{pkg_name}%{?ghc_name:-%{ghc_name}}
-Version:        1.8.0.0
-Release:        4%{?dist}
+Version:        1.9.0.0
+Release:        1%{?dist}
 Summary:        LSP server for GHC %{ghc_version}
 
 License:        ASL 2.0
@@ -396,7 +396,7 @@ Please see the README on GitHub at
 %package wrapper
 Summary: Haskell LSP server wrapper
 Obsoletes:  haskell-language-server-wrapper-ghc8.10 < %{version}
-Obsoletes:  haskell-language-server-wrapper-ghc9.10 < %{version}
+Obsoletes:  haskell-language-server-wrapper-ghc9.0 < %{version}
 
 
 %description wrapper
@@ -411,6 +411,8 @@ Please see the README on GitHub at
 %autosetup -p1 -n %{pkgver}
 # End cabal-rpm setup
 cabal-tweak-flag dynamic False
+# https://github.com/haskell/haskell-language-server/issues/3427
+cabal-tweak-flag callHierarchy False
 
 %if %[v"%{ghc_version}" < v"9.0"]
 cabal-tweak-flag hlint False
@@ -418,17 +420,9 @@ cabal-tweak-flag hlint False
 
 cabal update
 %if %[v"%{ghc_version}" < v"9.2"]
-%define stylishplugin hls-stylish-haskell-plugin-1.0.1.1
-cabal unpack %{stylishplugin}
-sed -i -e 's/=1.4/=1.5/' -e 's/=1.7/=1.8/' %{stylishplugin}/hls-stylish-haskell-plugin.cabal
-echo "packages: . ./%{stylishplugin}" > cabal.project
 %else
 cabal-tweak-flag stylishHaskell False
-echo "packages: ." > cabal.project
 %endif
-
-echo "constraints: hlint +ghc-lib, ghc-lib-parser-ex -auto, stylish-haskell +ghc-lib" >> cabal.project
-
 
 %build
 # Begin cabal-rpm build:
@@ -468,6 +462,11 @@ rm %{buildroot}%{_bindir}/haskell-language-server-wrapper
 
 
 %changelog
+* Tue Dec 27 2022 Jens Petersen <petersen@redhat.com> - 1.9.0.0-1
+- https://github.com/haskell/haskell-language-server/releases/tag/1.9.0.0
+- https://hackage.haskell.org/package/haskell-language-server-1.9.0.0/changelog
+- disable call-hierarchy plugin until Hackage updated
+
 * Tue Nov 29 2022 Jens Petersen <petersen@redhat.com> - 1.8.0.0-4
 - fixup obsoletes correctly using ghc_version
 
