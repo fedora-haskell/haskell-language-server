@@ -20,7 +20,7 @@
 %global executable %{pkg_name}-%{ghc_version}
 
 Name:           %{pkg_name}%{?ghc_name:-%{ghc_name}}
-Version:        1.9.0.0
+Version:        1.9.1.0
 Release:        1%{?dist}
 Summary:        LSP server for GHC %{ghc_version}
 
@@ -69,7 +69,8 @@ BuildRequires:  ghc-hashable-devel
 #BuildRequires:  ghc-hie-bios-devel
 #BuildRequires:  ghc-hiedb-devel
 #BuildRequires:  ghc-hls-alternate-number-format-plugin-devel
-#BuildRequires:  ghc-hls-brittany-plugin-devel
+#BuildRequires:  ghc-hls-cabal-fmt-plugin-devel
+#BuildRequires:  ghc-hls-cabal-plugin-devel
 #BuildRequires:  ghc-hls-call-hierarchy-plugin-devel
 #BuildRequires:  ghc-hls-change-type-signature-plugin-devel
 #BuildRequires:  ghc-hls-class-plugin-devel
@@ -77,11 +78,11 @@ BuildRequires:  ghc-hashable-devel
 #BuildRequires:  ghc-hls-eval-plugin-devel
 #BuildRequires:  ghc-hls-explicit-fixity-plugin-devel
 #BuildRequires:  ghc-hls-explicit-imports-plugin-devel
+#BuildRequires:  ghc-hls-explicit-record-fields-plugin-devel
 #BuildRequires:  ghc-hls-floskell-plugin-devel
 #BuildRequires:  ghc-hls-fourmolu-plugin-devel
 #BuildRequires:  ghc-hls-gadt-plugin-devel
 #BuildRequires:  ghc-hls-graph-devel
-#BuildRequires:  ghc-hls-haddock-comments-plugin-devel
 #BuildRequires:  ghc-hls-hlint-plugin-devel
 #BuildRequires:  ghc-hls-module-name-plugin-devel
 #BuildRequires:  ghc-hls-ormolu-plugin-devel
@@ -93,9 +94,6 @@ BuildRequires:  ghc-hashable-devel
 #BuildRequires:  ghc-hls-rename-plugin-devel
 #BuildRequires:  ghc-hls-retrie-plugin-devel
 #BuildRequires:  ghc-hls-splice-plugin-devel
-#BuildRequires:  ghc-hls-stan-plugin-devel
-#BuildRequires:  ghc-hls-stylish-haskell-plugin-devel
-#BuildRequires:  ghc-hls-tactics-plugin-devel
 %if %{defined fedora}
 BuildRequires:  ghc-hslogger-devel
 BuildRequires:  ghc-lens-devel
@@ -142,13 +140,10 @@ BuildRequires:  ghc-ghc-boot-devel
 #BuildRequires:  ghc-ghc-check-devel
 #BuildRequires:  ghc-ghc-trace-events-devel
 BuildRequires:  ghc-haddock-library-devel
-#BuildRequires:  ghc-heapsize-devel
 #BuildRequires:  ghc-hie-compat-devel
+#BuildRequires:  ghc-implicit-hie-devel
 #BuildRequires:  ghc-implicit-hie-cradle-devel
 #BuildRequires:  ghc-list-t-devel
-%if %{defined fedora}
-BuildRequires:  ghc-monoid-subclasses-devel
-%endif
 #BuildRequires:  ghc-opentelemetry-devel
 BuildRequires:  ghc-parallel-devel
 %if %{defined fedora}
@@ -189,6 +184,8 @@ BuildRequires:  ghc-syb-devel
 #BuildRequires:  ghc-brittany-devel
 #BuildRequires:  ghc-czipwith-devel
 #BuildRequires:  ghc-ghc-exactprint-devel
+# for missing dep 'hls-cabal-plugin':
+BuildRequires:  ghc-Cabal-devel
 # for missing dep 'hls-change-type-signature-plugin':
 BuildRequires:  ghc-syb-devel
 # for missing dep 'hls-class-plugin':
@@ -211,6 +208,8 @@ BuildRequires:  ghc-time-devel
 %if %{defined fedora}
 BuildRequires:  ghc-unliftio-devel
 %endif
+# for missing dep 'hls-explicit-record-fields-plugin':
+BuildRequires:  ghc-syb-devel
 # for missing dep 'hls-floskell-plugin':
 #BuildRequires:  ghc-floskell-devel
 # for missing dep 'hls-fourmolu-plugin':
@@ -225,14 +224,11 @@ BuildRequires:  ghc-js-dgtable-devel
 BuildRequires:  ghc-js-flot-devel
 BuildRequires:  ghc-js-jquery-devel
 #BuildRequires:  ghc-list-t-devel
-BuildRequires:  ghc-primitive-devel
 #BuildRequires:  ghc-stm-containers-devel
 BuildRequires:  ghc-time-devel
 %if %{defined fedora}
 BuildRequires:  ghc-unliftio-devel
 %endif
-# for missing dep 'hls-haddock-comments-plugin':
-#BuildRequires:  ghc-ghc-exactprint-devel
 # for missing dep 'hls-hlint-plugin':
 BuildRequires:  ghc-Diff-devel
 #BuildRequires:  ghc-apply-refact-devel
@@ -248,8 +244,10 @@ BuildRequires:  ghc-Diff-devel
 #BuildRequires:  ghc-dependent-map-devel
 #BuildRequires:  ghc-dependent-sum-devel
 BuildRequires:  ghc-dlist-devel
+#BuildRequires:  ghc-hw-fingertree-devel
 %if %{defined fedora}
 BuildRequires:  ghc-lens-aeson-devel
+BuildRequires:  ghc-megaparsec-devel
 %endif
 #BuildRequires:  ghc-opentelemetry-devel
 # for missing dep 'hls-pragmas-plugin':
@@ -278,34 +276,13 @@ BuildRequires:  ghc-foldl-devel
 #BuildRequires:  ghc-ghc-exactprint-devel
 #BuildRequires:  ghc-retrie-devel
 BuildRequires:  ghc-syb-devel
-# for missing dep 'hls-stan-plugin':
-#BuildRequires:  ghc-stan-devel
-# for missing dep 'hls-stylish-haskell-plugin':
-#BuildRequires:  ghc-stylish-haskell-devel
-# for missing dep 'hls-tactics-plugin':
-%if %{defined fedora}
-BuildRequires:  ghc-fingertree-devel
-%endif
-#BuildRequires:  ghc-generic-lens-devel
-#BuildRequires:  ghc-ghc-exactprint-devel
-#BuildRequires:  ghc-ghc-source-gen-devel
-#BuildRequires:  ghc-hyphenation-devel
-%if %{defined fedora}
-BuildRequires:  ghc-megaparsec-devel
-BuildRequires:  ghc-parser-combinators-devel
-%endif
-#BuildRequires:  ghc-refinery-devel
-#BuildRequires:  ghc-retrie-devel
-BuildRequires:  ghc-syb-devel
-#BuildRequires:  ghc-unagi-chan-devel
 # for missing dep 'lsp':
 BuildRequires:  ghc-attoparsec-devel
-#BuildRequires:  ghc-dependent-map-devel
-BuildRequires:  ghc-network-uri-devel
+#BuildRequires:  ghc-co-log-core-devel
+BuildRequires:  ghc-exceptions-devel
 BuildRequires:  ghc-random-devel
-BuildRequires:  ghc-scientific-devel
 #BuildRequires:  ghc-sorted-list-devel
-BuildRequires:  ghc-time-devel
+#BuildRequires:  ghc-text-rope-devel
 %if %{defined fedora}
 BuildRequires:  ghc-uuid-devel
 %endif
@@ -325,12 +302,16 @@ BuildRequires:  ghc-semigroups-devel
 BuildRequires:  ghc-template-haskell-devel
 BuildRequires:  ghc-time-devel
 # for missing dep 'lsp-types':
-#BuildRequires:  ghc-dependent-sum-devel
-#BuildRequires:  ghc-dependent-sum-template-devel
+BuildRequires:  ghc-Diff-devel
+BuildRequires:  ghc-dlist-devel
+BuildRequires:  ghc-exceptions-devel
+#BuildRequires:  ghc-mod-devel
 BuildRequires:  ghc-network-uri-devel
-#BuildRequires:  ghc-rope-utf16-splay-devel
+BuildRequires:  ghc-safe-devel
 BuildRequires:  ghc-scientific-devel
-#BuildRequires:  ghc-some-devel
+%if 0%{?fedora} >= 38
+BuildRequires:  ghc-some-devel
+%endif
 BuildRequires:  ghc-template-haskell-devel
 # End cabal-rpm deps
 # more missing subdeps
@@ -343,7 +324,9 @@ BuildRequires:  ghc-filemanip-devel
 BuildRequires:  ghc-hashtables-devel
 %if %{defined fedora}
 BuildRequires:  ghc-haskell-src-exts-devel
+%if 0%{?fedora} < 38
 BuildRequires:  ghc-indexed-profunctors-devel
+%endif
 BuildRequires:  ghc-logict-devel
 BuildRequires:  ghc-microlens-devel
 BuildRequires:  ghc-microlens-th-devel
@@ -414,7 +397,8 @@ cabal-tweak-flag dynamic False
 # https://github.com/haskell/haskell-language-server/issues/3427
 cabal-tweak-flag callHierarchy False
 
-%if %[v"%{ghc_version}" < v"9.0"]
+# for ghc-9.2+ hlint needs to be built with ghc-lib flag
+%if %[v"%{ghc_version}" < v"9.0"] || %[v"%{ghc_version}" > v"9.2"]
 cabal-tweak-flag hlint False
 %endif
 
@@ -462,6 +446,9 @@ rm %{buildroot}%{_bindir}/haskell-language-server-wrapper
 
 
 %changelog
+* Sat Feb 25 2023 Jens Petersen <petersen@redhat.com> - 1.9.1.0-1
+- https://hackage.haskell.org/package/haskell-language-server-1.9.1.0/changelog
+
 * Tue Dec 27 2022 Jens Petersen <petersen@redhat.com> - 1.9.0.0-1
 - https://github.com/haskell/haskell-language-server/releases/tag/1.9.0.0
 - https://hackage.haskell.org/package/haskell-language-server-1.9.0.0/changelog
