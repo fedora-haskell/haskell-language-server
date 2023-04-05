@@ -397,11 +397,16 @@ cabal-tweak-flag callHierarchy False
 cabal-tweak-flag hlint False
 %endif
 
-cabal update
-%if %[v"%{ghc_version}" < v"9.2"]
-%else
+%if %[v"%{ghc_version}" > v"9.2"]
 cabal-tweak-flag stylishHaskell False
 %endif
+
+%if %[v"%{ghc_version}" > v"9.4"] && %[v"%{ghc_version}" < v"9.5"]
+cabal-tweak-flag floskell False
+cabal-tweak-flag rename False
+%endif
+
+cabal update
 
 %build
 # Begin cabal-rpm build:
