@@ -397,6 +397,11 @@ cabal-tweak-flag callHierarchy False
 cabal-tweak-flag hlint False
 %endif
 
+# https://github.com/haskell/haskell-language-server/issues/3554
+%if %[v"%{ghc_version}" < v"9.2"]
+cabal-tweak-flag tactic False
+%endif
+
 %if %[v"%{ghc_version}" > v"9.2"]
 cabal-tweak-flag stylishHaskell False
 %endif
