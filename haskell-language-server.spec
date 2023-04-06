@@ -21,7 +21,7 @@
 
 Name:           %{pkg_name}%{?ghc_name:-%{ghc_name}}
 Version:        1.10.0.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        LSP server for GHC %{ghc_version}
 
 License:        Apache-2.0
@@ -30,6 +30,8 @@ Url:            https://hackage.haskell.org/package/%{pkg_name}
 Source0:        https://hackage.haskell.org/package/%{pkgver}/%{pkgver}.tar.gz
 # End cabal-rpm sources
 Patch0:         haskell-language-server-1.7.0.0-prettyprinter-1.7.patch
+# https://github.com/nikita-volkov/stm-hamt/issues/6
+Patch1:         haskell-language-server-f37-stm-hamt.patch
 
 # Begin cabal-rpm deps:
 BuildRequires:  ghc-rpm-macros
@@ -386,7 +388,12 @@ Please see the README on GitHub at
 
 %prep
 # Begin cabal-rpm setup:
-%autosetup -p1 -n %{pkgver}
+%setup -q -n %{pkgver}
+%patch -P0 -p1 -b .orig
+%if 0%{?fedora} < 38
+%patch -P1 -p1 -b .orig
+%endif
+
 # End cabal-rpm setup
 cabal-tweak-flag dynamic False
 # https://github.com/haskell/haskell-language-server/issues/3427

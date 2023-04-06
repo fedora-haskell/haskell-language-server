@@ -1,0 +1,10 @@
+--- haskell-language-server-1.10.0.0/haskell-language-server.cabal~	2023-04-06 19:22:47.086245449 +0800
++++ haskell-language-server-1.10.0.0/haskell-language-server.cabal	2023-04-06 19:29:42.098660012 +0800
+@@ -422,6 +422,7 @@
+     , sqlite-simple
+     , unordered-containers
+     , aeson-pretty
++    , stm-hamt == 1.2.0.9
+ 
+   default-language: Haskell2010
+   default-extensions: DataKinds, TypeOperators
