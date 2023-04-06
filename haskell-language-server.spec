@@ -163,7 +163,9 @@ BuildRequires:  ghc-conduit-devel
 BuildRequires:  ghc-conduit-extra-devel
 BuildRequires:  ghc-exceptions-devel
 BuildRequires:  ghc-file-embed-devel
+%if %{defined fedora}
 BuildRequires:  ghc-hslogger-devel
+%endif
 BuildRequires:  ghc-time-devel
 BuildRequires:  ghc-unix-compat-devel
 BuildRequires:  ghc-vector-devel
