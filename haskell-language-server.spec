@@ -411,6 +411,10 @@ cabal-tweak-flag floskell False
 cabal-tweak-flag rename False
 %endif
 
+%if %[v"%{ghc_version}" > v"9.6"] && %[v"%{ghc_version}" < v"9.7"]
+cabal-tweak-flag alternateNumberFormat False
+%endif
+
 cabal update
 
 %build
