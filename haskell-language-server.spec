@@ -407,8 +407,7 @@ cabal-tweak-flag dynamic False
 # https://github.com/haskell/haskell-language-server/issues/3427
 cabal-tweak-flag callHierarchy False
 
-# for ghc-9.2+ hlint needs to be built with ghc-lib flag
-%if %[v"%{ghc_version}" < v"9.0"] || %[v"%{ghc_version}" > v"9.2"]
+%if %[v"%{ghc_version}" < v"9.4"]
 cabal-tweak-flag hlint False
 %endif
 
