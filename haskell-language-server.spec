@@ -404,8 +404,6 @@ Please see the README on GitHub at
 
 # End cabal-rpm setup
 cabal-tweak-flag dynamic False
-# https://github.com/haskell/haskell-language-server/issues/3427
-cabal-tweak-flag callHierarchy False
 
 %if %[v"%{ghc_version}" < v"9.4"]
 cabal-tweak-flag hlint False
