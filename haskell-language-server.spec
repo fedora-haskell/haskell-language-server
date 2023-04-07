@@ -392,8 +392,14 @@ Please see the README on GitHub at
 # Begin cabal-rpm setup:
 %setup -q -n %{pkgver}
 %patch -P0 -p1 -b .orig
+%if %{undefined ghc_name}
 %if 0%{?fedora} < 38
 %patch -P1 -p1 -b .orig
+%endif
+%else
+%if %[v"%{ghc_version}" < v"9.0"]
+%patch -P1 -p1 -b .orig
+%endif
 %endif
 
 # End cabal-rpm setup
