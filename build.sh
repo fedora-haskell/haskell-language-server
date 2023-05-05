@@ -8,10 +8,11 @@ if [[ "$1" = "-h" ]]; then
 fi
 
 branches=${1:-rawhide f38 f37 f36 epel9}
-shift
-if [[ -z "$1" ]]; then
+
+if [[ -z "$2" ]]; then
     versions=('' 8.10 9.0 9.2 9.4)
 else
+    shift
     versions=($*)
 fi
 
