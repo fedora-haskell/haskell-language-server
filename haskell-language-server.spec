@@ -420,6 +420,9 @@ cabal-tweak-flag stylishHaskell False
 
 %if %[v"%{ghc_version}" > v"9.4"] && %[v"%{ghc_version}" < v"9.5"]
 cabal-tweak-flag floskell False
+%endif
+
+%if %[v"%{ghc_version}" > v"9.4"]
 cabal-tweak-flag rename False
 %endif
 
