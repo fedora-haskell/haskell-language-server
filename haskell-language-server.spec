@@ -20,8 +20,8 @@
 %global executable %{pkg_name}-%{ghc_version}
 
 Name:           %{pkg_name}%{?ghc_name:-%{ghc_name}}
-Version:        1.10.0.0
-Release:        2%{?dist}
+Version:        2.0.0.0
+Release:        1%{?dist}
 Summary:        LSP server for GHC %{ghc_version}
 
 License:        Apache-2.0
@@ -411,23 +411,24 @@ cabal-tweak-flag hlint False
 
 # https://github.com/haskell/haskell-language-server/issues/3554
 %if %[v"%{ghc_version}" < v"9.2"]
-cabal-tweak-flag tactic False
+#cabal-tweak-flag tactic False
 %endif
 
-%if %[v"%{ghc_version}" > v"9.2"]
+%if %[v"%{ghc_version}" > v"9.4"]
 cabal-tweak-flag stylishHaskell False
 %endif
 
 %if %[v"%{ghc_version}" > v"9.4"] && %[v"%{ghc_version}" < v"9.5"]
-cabal-tweak-flag floskell False
+#cabal-tweak-flag floskell False
 %endif
 
+# https://github.com/haskell/haskell-language-server/issues/3594
 %if %[v"%{ghc_version}" > v"9.4"]
-cabal-tweak-flag rename False
+#cabal-tweak-flag rename False
 %endif
 
 %if %[v"%{ghc_version}" > v"9.6"] && %[v"%{ghc_version}" < v"9.7"]
-cabal-tweak-flag alternateNumberFormat False
+#cabal-tweak-flag alternateNumberFormat False
 %endif
 
 cabal update
@@ -470,6 +471,9 @@ rm %{buildroot}%{_bindir}/haskell-language-server-wrapper
 
 
 %changelog
+* Sat May 20 2023 Jens Petersen <petersen@redhat.com> - 2.0.0.0-1
+- https://hackage.haskell.org/package/haskell-language-server-2.0.0.0/changelog
+
 * Sun Apr  2 2023 Jens Petersen <petersen@redhat.com> - 1.10.0.0-1
 - https://hackage.haskell.org/package/haskell-language-server-1.10.0.0/changelog
 
