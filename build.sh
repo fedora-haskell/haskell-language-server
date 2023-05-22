@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 set -e
 
@@ -9,16 +9,19 @@ fi
 
 branches=${1:-rawhide f38 f37 f36 epel9}
 
-if [[ -z "$2" ]]; then
-    versions=('' 8.10 9.0 9.2 9.4)
+if [[ $# -lt 2 ]]; then
+    versions=('' 8.10 9.0 9.2 9.4 9.6)
 else
     shift
-    versions=($*)
+    versions=("$@")
 fi
 
 for br in $branches; do
-    for arch in "-a x86_64" "-X x86_64 -R"; do
+#    for arch in "-a x86_64" "-X x86_64 -R"; do
+    for arch in "-X ppc64le -R"; do
+#    for arch in "-R"; do
         for ghc in "${versions[@]}"; do
+          if [ "$br" != "f37" -o "$ghc" != "8.10" ]; then
             echo
             if [[ -z "$ghc" ]] && grep -q '^%global ghc_name' haskell-language-server.spec; then
                 sed -i -e 's/%global ghc_name .*/#%%global ghc_name ghc9.4/' haskell-language-server.spec
@@ -27,6 +30,7 @@ for br in $branches; do
             fi
             grep 'global ghc_name' haskell-language-server.spec | grep "$ghc"
             fbrnch copr haskell-language-server $br $arch
+          fi
         done
     done
 done
