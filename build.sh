@@ -16,8 +16,8 @@ else
     versions=("$@")
 fi
 
-if [[ -z "$ARCH" ]]; then
-    ARCH=("-X ppc64le -R")
+if [[ -z "$ARCHOPT" ]]; then
+    ARCHOPT=("-X ppc64le -R")
 fi
 
 for br in $branches; do
@@ -31,8 +31,14 @@ for br in $branches; do
             else
                 sed -i -e 's/#%%global ghc_name/%global ghc_name/' -e s/'\(%global ghc_name ghc\).*'/'\1'"$ghc"/ haskell-language-server.spec
             fi
-            grep 'global ghc_name' haskell-language-server.spec | grep "$ghc"
-            fbrnch copr haskell-language-server $br $ARCH
+            ghc_name=$(grep '%global ghc_name' haskell-language-server.spec)
+            echo "$ghc_name"
+            if [ "$ghc_name" = "%global ghc_name ghc" ]; then
+                echo "Illegal ghc_name!"
+                exit 1
+            else
+                fbrnch copr haskell-language-server $br $ARCHOPT
+            fi
           fi
         done
 done
