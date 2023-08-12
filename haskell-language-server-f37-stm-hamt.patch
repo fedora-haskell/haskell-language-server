@@ -4,7 +4,7 @@
      , sqlite-simple
      , unordered-containers
      , aeson-pretty
-+    , stm-hamt == 1.2.0.9
++    , stm-hamt < 1.2.0.10 || > 1.2.0.10
  
    default-language: Haskell2010
    default-extensions: DataKinds, TypeOperators
