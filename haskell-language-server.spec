@@ -488,6 +488,9 @@ rm %{buildroot}%{_bindir}/haskell-language-server-wrapper
 
 
 %changelog
+* Sat Aug 12 2023 Jens Petersen <petersen@redhat.com> - 2.1.0.0-1
+- https://hackage.haskell.org/package/haskell-language-server-2.1.0.0/changelog
+
 * Tue Aug  8 2023 Jens Petersen <petersen@redhat.com> - 2.0.0.1-1
 - https://hackage.haskell.org/package/haskell-language-server-2.0.0.1/changelog
 
