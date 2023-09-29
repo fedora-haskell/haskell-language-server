@@ -25,7 +25,7 @@
 %global executable %{pkg_name}-%{ghc_version}
 
 Name:           %{pkg_name}%{?ghc_name:-%{ghc_name}}
-Version:        2.1.0.0
+Version:        2.3.0.0
 Release:        1%{?dist}
 Summary:        LSP server for GHC %{ghc_version}
 
@@ -488,6 +488,9 @@ rm %{buildroot}%{_bindir}/haskell-language-server-wrapper
 
 
 %changelog
+* Fri Sep 29 2023 Jens Petersen <petersen@redhat.com> - 2.3.0.0-1
+- https://hackage.haskell.org/package/haskell-language-server-2.3.0.0/changelog
+
 * Sat Aug 12 2023 Jens Petersen <petersen@redhat.com> - 2.1.0.0-1
 - https://hackage.haskell.org/package/haskell-language-server-2.1.0.0/changelog
 
