@@ -34,6 +34,7 @@ Url:            https://hackage.haskell.org/package/%{pkg_name}
 # Begin cabal-rpm sources:
 Source0:        https://hackage.haskell.org/package/%{pkgver}/%{pkgver}.tar.gz
 # End cabal-rpm sources
+Provides:       haskell-language-server-ghc-%{ghc_version} = %{version}-%{release}
 # https://github.com/nikita-volkov/stm-hamt/issues/6
 Patch1:         haskell-language-server-f37-stm-hamt.patch
 
@@ -490,6 +491,7 @@ rm %{buildroot}%{_bindir}/haskell-language-server-wrapper
 %changelog
 * Fri Sep 29 2023 Jens Petersen <petersen@redhat.com> - 2.3.0.0-1
 - https://hackage.haskell.org/package/haskell-language-server-2.3.0.0/changelog
+- Provides haskell-language-server-ghc-X.Y.Z
 
 * Sat Aug 12 2023 Jens Petersen <petersen@redhat.com> - 2.1.0.0-1
 - https://hackage.haskell.org/package/haskell-language-server-2.1.0.0/changelog
