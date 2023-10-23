@@ -35,8 +35,6 @@ Url:            https://hackage.haskell.org/package/%{pkg_name}
 Source0:        https://hackage.haskell.org/package/%{pkgver}/%{pkgver}.tar.gz
 # End cabal-rpm sources
 Provides:       haskell-language-server-ghc-%{ghc_version} = %{version}-%{release}
-# https://github.com/nikita-volkov/stm-hamt/issues/6
-Patch1:         haskell-language-server-f37-stm-hamt.patch
 
 # Begin cabal-rpm deps:
 BuildRequires:  ghc-rpm-macros
@@ -415,38 +413,12 @@ Please see the README on GitHub at
 %if 0%{?fedora} < 38
 %patch -P1 -p1 -b .orig
 %endif
-%else
-%if %[v"%{ghc_version}" < v"9.0"]
-%patch -P1 -p1 -b .orig
-%endif
 %endif
 # End cabal-rpm setup
 cabal-tweak-flag dynamic False
 
 %if %[v"%{ghc_version}" < v"9.4"]
 cabal-tweak-flag hlint False
-%endif
-
-# https://github.com/haskell/haskell-language-server/issues/3554
-%if %[v"%{ghc_version}" < v"9.2"]
-#cabal-tweak-flag tactic False
-%endif
-
-%if %[v"%{ghc_version}" > v"9.4"]
-#cabal-tweak-flag stylishHaskell False
-%endif
-
-%if %[v"%{ghc_version}" > v"9.4"] && %[v"%{ghc_version}" < v"9.5"]
-#cabal-tweak-flag floskell False
-%endif
-
-# https://github.com/haskell/haskell-language-server/issues/3594
-%if %[v"%{ghc_version}" > v"9.4"]
-#cabal-tweak-flag rename False
-%endif
-
-%if %[v"%{ghc_version}" > v"9.6"] && %[v"%{ghc_version}" < v"9.7"]
-#cabal-tweak-flag alternateNumberFormat False
 %endif
 
 cabal update %{!?_with_compiler_default:-w ghc-%{ghc_version}}
