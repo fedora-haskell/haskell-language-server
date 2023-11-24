@@ -479,7 +479,7 @@ cabal update %{!?_with_compiler_default:-w ghc-%{ghc_version}}
 %ghc_set_gcc_flags
 # Begin cabal-rpm install
 mkdir -p %{buildroot}%{_bindir}
-cabal install %{!?_with_compiler_default:-w ghc-%{ghc_version}} --install-method=copy --enable-executable-stripping --installdir=%{buildroot}%{_bindir}
+cabal install %{!?_with_compiler_default:-w ghc-%{ghc_version}} --install-method=copy --enable-executable-stripping --installdir=%{buildroot}%{_bindir} --constraint='hie-compat < 0.3.1.1'
 mv %{buildroot}%{_bindir}/{%{pkg_name},%{executable}}
 mkdir -p %{buildroot}%{_datadir}/bash-completion/completions/
 %{buildroot}%{_bindir}/%{executable} --bash-completion-script %{executable} | sed s/filenames/default/ > %{buildroot}%{_datadir}/bash-completion/completions/%{executable}
