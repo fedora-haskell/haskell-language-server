@@ -12,6 +12,8 @@
 
 %global ghc_prefix %{?ghc_name}%{!?ghc_name:ghc}
 
+%global wrapper_pkg 0%{?fedora} < 38 && "%{ghc_name}" == "ghc9.2" || 0%{?fedora} >= 38
+
 %global ghc_without_dynamic 1
 %global ghc_without_shared 1
 %undefine with_ghc_prof
@@ -27,7 +29,7 @@
 
 Name:           %{pkg_name}%{?ghc_name:-%{ghc_name}}
 Version:        2.4.0.0
-Release:        2%{?dist}.ghc%{ghc_minor}
+Release:        3%{?dist}.ghc%{ghc_minor}
 Summary:        LSP server for GHC %{ghc_version}
 
 License:        Apache-2.0
@@ -366,7 +368,7 @@ BuildRequires:  cabal-install > 3.4
 BuildRequires:  cabal-install > 3.2
 %endif
 
-%if %{undefined ghc_name}
+%if %{wrapper_pkg}
 Requires: haskell-language-server-wrapper = %{version}-%{release}
 %else
 Requires: haskell-language-server-wrapper = %{version}
@@ -396,14 +398,12 @@ Please see the README on GitHub at
 <https://github.com/haskell/haskell-language-server#readme>.
 
 
-%if %{undefined ghc_name}
-%package wrapper
+%if %{wrapper_pkg}
+%package -n haskell-language-server-wrapper
 Summary: Haskell LSP server wrapper
-Obsoletes:  haskell-language-server-wrapper-ghc8.10 < %{version}
-Obsoletes:  haskell-language-server-wrapper-ghc9.0 < %{version}
 
 
-%description wrapper
+%description -n haskell-language-server-wrapper
 The Haskell language server (LSP) wrapper
 
 Please see the README on GitHub at
@@ -442,7 +442,7 @@ cabal install %{!?_with_compiler_default:-w ghc-%{ghc_version}} --install-method
 mv %{buildroot}%{_bindir}/{%{pkg_name},%{executable}}
 mkdir -p %{buildroot}%{_datadir}/bash-completion/completions/
 %{buildroot}%{_bindir}/%{executable} --bash-completion-script %{executable} | sed s/filenames/default/ > %{buildroot}%{_datadir}/bash-completion/completions/%{executable}
-%if %{undefined ghc_name}
+%if %{wrapper_pkg}
 %{buildroot}%{_bindir}/haskell-language-server-wrapper --bash-completion-script haskell-language-server-wrapper | sed s/filenames/default/ > %{buildroot}%{_datadir}/bash-completion/completions/haskell-language-server-wrapper
 %else
 rm %{buildroot}%{_bindir}/haskell-language-server-wrapper
@@ -459,14 +459,17 @@ rm %{buildroot}%{_bindir}/haskell-language-server-wrapper
 # End cabal-rpm files
 
 
-%if %{undefined ghc_name}
-%files wrapper
+%if %{wrapper_pkg}
+%files -n haskell-language-server-wrapper
 %{_bindir}/haskell-language-server-wrapper
 %{_datadir}/bash-completion/completions/haskell-language-server-wrapper
 %endif
 
 
 %changelog
+* Fri Nov 24 2023 Jens Petersen <petersen@redhat.com> - 2.4.0.0-3.ghc%{ghc_minor}
+- build wrapper with ghc9.2 for before Fedora 38 (ie ghc-8.10.7 releases)
+
 * Thu Nov 23 2023 Jens Petersen <petersen@redhat.com> - 2.4.0.0-2.ghc%{ghc_minor}
 - add ghc minor version suffix to release
 
