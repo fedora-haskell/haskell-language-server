@@ -38,12 +38,13 @@ for br in $branches; do
                 9.2) LATEST=9.2.8 ;;
                 9.0) LATEST=9.0.2 ;;
                 8.10) LATEST=8.10.7 ;;
+                '') ;;
                 *) echo "unknown major version: $ghc"
                    exit 1
                    ;;
             esac
             ghcversion=$(fdrq $br --qf "%{version}" --latest-limit 1 ghc$ghc)
-            if [ "$ghcversion" != "$LATEST" ]; then
+            if [ -n "$LATEST" -a "$ghcversion" != "$LATEST" ]; then
                 echo "repo ghc$ghc-$ghcversion /= $LATEST"
                 exit 1
             else
