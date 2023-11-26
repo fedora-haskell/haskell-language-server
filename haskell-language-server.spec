@@ -155,7 +155,9 @@ BuildRequires:  ghc-vector-devel
 BuildRequires:  ghc-constraints-devel
 BuildRequires:  ghc-template-haskell-devel
 # for missing dep 'dependent-sum':
+%if 0%{?fedora} >= 38
 BuildRequires:  ghc-some-devel
+%endif
 # for missing dep 'floskell':
 BuildRequires:  ghc-ansi-wl-pprint-devel
 BuildRequires:  ghc-attoparsec-devel
@@ -163,7 +165,9 @@ BuildRequires:  ghc-attoparsec-devel
 BuildRequires:  ghc-haskell-src-exts-devel
 %endif
 # for missing dep 'fourmolu':
+%if 0%{?fedora} >= 38
 BuildRequires:  ghc-Cabal-syntax-devel
+%endif
 BuildRequires:  ghc-Diff-devel
 BuildRequires:  ghc-MemoTrie-devel
 BuildRequires:  ghc-ansi-terminal-devel
@@ -173,7 +177,9 @@ BuildRequires:  ghc-ghc-lib-parser-devel
 BuildRequires:  ghc-megaparsec-devel
 BuildRequires:  ghc-scientific-devel
 BuildRequires:  ghc-syb-devel
+%if 0%{?fedora} >= 38
 BuildRequires:  ghc-th-env-devel
+%endif
 BuildRequires:  ghc-yaml-devel
 # for missing dep 'fuzzy':
 BuildRequires:  ghc-monoid-subclasses-devel
@@ -228,7 +234,7 @@ BuildRequires:  ghc-terminal-size-devel
 # for missing dep 'hls-alternate-number-format-plugin':
 BuildRequires:  ghc-syb-devel
 # for missing dep 'hls-cabal-plugin':
-%if 0%{?fedora} >= 39
+%if 0%{?fedora} >= 38
 BuildRequires:  ghc-Cabal-syntax-devel
 %endif
 # for missing dep 'hls-change-type-signature-plugin':
@@ -327,7 +333,9 @@ BuildRequires:  ghc-dlist-devel
 BuildRequires:  ghc-exceptions-devel
 BuildRequires:  ghc-file-embed-devel
 BuildRequires:  ghc-indexed-traversable-devel
+%if 0%{?fedora} >= 38
 BuildRequires:  ghc-indexed-traversable-instances-devel
+%endif
 BuildRequires:  ghc-lens-aeson-devel
 BuildRequires:  ghc-network-uri-devel
 BuildRequires:  ghc-safe-devel
@@ -336,7 +344,9 @@ BuildRequires:  ghc-some-devel
 %endif
 BuildRequires:  ghc-template-haskell-devel
 # for missing dep 'mod':
+%if 0%{?fedora} >= 38
 BuildRequires:  ghc-ghc-bignum-devel
+%endif
 BuildRequires:  ghc-primitive-devel
 BuildRequires:  ghc-vector-devel
 # for missing dep 'monad-dijkstra':
@@ -346,7 +356,9 @@ BuildRequires:  ghc-psqueues-devel
 BuildRequires:  ghc-exceptions-devel
 # for missing dep 'primitive-extras':
 BuildRequires:  ghc-cereal-devel
+%if 0%{?fedora} >= 38
 BuildRequires:  ghc-deferred-folds-devel
+%endif
 BuildRequires:  ghc-foldl-devel
 BuildRequires:  ghc-primitive-devel
 BuildRequires:  ghc-profunctors-devel
@@ -396,9 +408,11 @@ BuildRequires:  ghc-blaze-textual-devel
 BuildRequires:  ghc-template-haskell-devel
 BuildRequires:  ghc-time-devel
 # for missing dep 'stm-containers':
+%if 0%{?fedora} >= 38
 BuildRequires:  ghc-deferred-folds-devel
 # for missing dep 'stm-hamt':
 BuildRequires:  ghc-deferred-folds-devel
+%endif
 BuildRequires:  ghc-primitive-devel
 # for missing dep 'stylish-haskell':
 BuildRequires:  ghc-Cabal-devel
@@ -455,11 +469,6 @@ Please see the README on GitHub at
 %prep
 # Begin cabal-rpm setup:
 %setup -q -n %{pkgver}
-%if %{undefined ghc_name}
-%if 0%{?fedora} < 38
-%patch -P1 -p1 -b .orig
-%endif
-%endif
 # End cabal-rpm setup
 cabal-tweak-flag dynamic False
 
