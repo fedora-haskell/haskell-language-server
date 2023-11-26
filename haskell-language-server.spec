@@ -12,7 +12,7 @@
 
 %global ghc_prefix %{?ghc_name}%{!?ghc_name:ghc}
 
-%global wrapper_pkg 0%{?fedora} < 38 && "%{?ghc_name}" == "ghc9.2" || 0%{?fedora} >= 38 &&  "%{?ghc_name}" == ""
+%global wrapper_pkg %[(0%{?fedora} < 38 && "%{?ghc_name}" == "ghc9.2") || (0%{?fedora} >= 38 && %{undefined ghc_name})]
 
 %global ghc_without_dynamic 1
 %global ghc_without_shared 1
@@ -29,7 +29,7 @@
 
 Name:           %{pkg_name}%{?ghc_name:-%{ghc_name}}
 Version:        2.4.0.0
-Release:        4%{?dist}.ghc%{ghc_minor}
+Release:        5%{?dist}.ghc%{ghc_minor}
 Summary:        LSP server for GHC %{ghc_version}
 
 License:        Apache-2.0
