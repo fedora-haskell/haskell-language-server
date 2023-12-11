@@ -28,8 +28,8 @@
 %global executable %{pkg_name}-%{ghc_version}
 
 Name:           %{pkg_name}%{?ghc_name:-%{ghc_name}}
-Version:        2.4.0.0
-Release:        5%{?dist}.ghc%{ghc_minor}
+Version:        2.5.0.0
+Release:        1%{?dist}.ghc%{ghc_minor}
 Summary:        LSP server for GHC %{ghc_version}
 
 License:        Apache-2.0
@@ -103,6 +103,7 @@ BuildRequires:  ghc-hashable-devel
 #BuildRequires:  ghc-hls-rename-plugin-devel
 #BuildRequires:  ghc-hls-retrie-plugin-devel
 #BuildRequires:  ghc-hls-splice-plugin-devel
+#BuildRequires:  ghc-hls-stan-plugin-devel
 #BuildRequires:  ghc-hls-stylish-haskell-plugin-devel
 %if %{defined fedora}
 BuildRequires:  ghc-lens-devel
@@ -167,7 +168,7 @@ BuildRequires:  ghc-attoparsec-devel
 BuildRequires:  ghc-haskell-src-exts-devel
 %endif
 # for missing dep 'fourmolu':
-%if 0%{?fedora} >= 38
+%if 0%{?fedora} >= 39
 BuildRequires:  ghc-Cabal-syntax-devel
 %endif
 BuildRequires:  ghc-Diff-devel
@@ -179,7 +180,7 @@ BuildRequires:  ghc-ghc-lib-parser-devel
 BuildRequires:  ghc-megaparsec-devel
 BuildRequires:  ghc-scientific-devel
 BuildRequires:  ghc-syb-devel
-%if 0%{?fedora} >= 38
+%if 0%{?fedora} >= 39
 BuildRequires:  ghc-th-env-devel
 %endif
 BuildRequires:  ghc-yaml-devel
@@ -236,7 +237,7 @@ BuildRequires:  ghc-terminal-size-devel
 # for missing dep 'hls-alternate-number-format-plugin':
 BuildRequires:  ghc-syb-devel
 # for missing dep 'hls-cabal-plugin':
-%if 0%{?fedora} >= 38
+%if 0%{?fedora} >= 39
 BuildRequires:  ghc-Cabal-syntax-devel
 %endif
 # for missing dep 'hls-change-type-signature-plugin':
@@ -345,6 +346,8 @@ BuildRequires:  ghc-safe-devel
 BuildRequires:  ghc-some-devel
 %endif
 BuildRequires:  ghc-template-haskell-devel
+# for missing dep 'microaeson':
+BuildRequires:  ghc-array-devel
 # for missing dep 'mod':
 %if 0%{?fedora} >= 38
 BuildRequires:  ghc-ghc-bignum-devel
@@ -358,7 +361,7 @@ BuildRequires:  ghc-psqueues-devel
 BuildRequires:  ghc-exceptions-devel
 # for missing dep 'primitive-extras':
 BuildRequires:  ghc-cereal-devel
-%if 0%{?fedora} >= 38
+%if 0%{?fedora} >= 39
 BuildRequires:  ghc-deferred-folds-devel
 %endif
 BuildRequires:  ghc-foldl-devel
@@ -409,8 +412,15 @@ BuildRequires:  ghc-blaze-textual-devel
 %endif
 BuildRequires:  ghc-template-haskell-devel
 BuildRequires:  ghc-time-devel
+# for missing dep 'stan':
+BuildRequires:  ghc-array-devel
+BuildRequires:  ghc-base64-devel
+BuildRequires:  ghc-blaze-html-devel
+BuildRequires:  ghc-colourista-devel
+BuildRequires:  ghc-pretty-simple-devel
+BuildRequires:  ghc-relude-devel
 # for missing dep 'stm-containers':
-%if 0%{?fedora} >= 38
+%if 0%{?fedora} >= 39
 BuildRequires:  ghc-deferred-folds-devel
 # for missing dep 'stm-hamt':
 BuildRequires:  ghc-deferred-folds-devel
@@ -426,6 +436,13 @@ BuildRequires:  ghc-strict-devel
 BuildRequires:  ghc-syb-devel
 # for missing dep 'text-rope':
 BuildRequires:  ghc-vector-devel
+# for missing dep 'tomland':
+BuildRequires:  ghc-megaparsec-devel
+BuildRequires:  ghc-parser-combinators-devel
+BuildRequires:  ghc-time-devel
+# for missing dep 'trial':
+BuildRequires:  ghc-colourista-devel
+BuildRequires:  ghc-dlist-devel
 %endif
 # End cabal-rpm deps
 
@@ -445,7 +462,7 @@ BuildRequires:  cabal-install > 3.2
 %if %{wrapper_pkg}
 Requires: haskell-language-server-wrapper = %{version}-%{release}
 %else
-Requires: haskell-language-server-wrapper = %{version}
+Requires: haskell-language-server-wrapper >= %{version}
 %endif
 %if %{defined ghc_version}
 Requires: %{ghc_prefix} = %{ghc_version}
@@ -536,6 +553,9 @@ rm %{buildroot}%{_bindir}/haskell-language-server-wrapper
 
 
 %changelog
+* Mon Dec 11 2023 Jens Petersen <petersen@redhat.com> - 2.5.0.0-1.ghc%{ghc_minor}
+- https://hackage.haskell.org/package/haskell-language-server-2.5.0.0/changelog
+
 * Fri Nov 24 2023 Jens Petersen <petersen@redhat.com> - 2.4.0.0-3.ghc%{ghc_minor}
 - build wrapper with ghc9.2 for before Fedora 38 (ie ghc-8.10.7 releases)
 

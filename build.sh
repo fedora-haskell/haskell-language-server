@@ -7,10 +7,10 @@ if [[ "$1" = "-h" ]]; then
     exit 1
 fi
 
-branches=${1:-rawhide f39 f38 f37 epel9}
+branches=${1:-rawhide f39 f38 epel9}
 
 if [[ $# -lt 2 ]]; then
-    versions=('' 9.6 9.4 9.2 9.0)
+    versions=('' 9.6 9.4 9.2)
 else
     shift
     versions=("$@")
