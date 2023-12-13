@@ -26,10 +26,12 @@ for br in $branches; do
         for ghc in "${versions[@]}"; do
           if [ "$br" != "f37" -a "$br" != "epel9" -o "$ghc" != "8.10" ]; then
             echo
-            if [[ -z "$ghc" ]] && grep -q '^%global ghc_name' haskell-language-server.spec; then
-                sed -i -e 's/%global ghc_name .*/#%%global ghc_name ghc9.4/' haskell-language-server.spec
+            if [[ -z "$ghc" ]]; then
+                if grep -q '^%global ghc_major' haskell-language-server.spec; then
+                    sed -i -e 's/%global ghc_major .*/#%%global ghc_major 9.4/' haskell-language-server.spec
+                fi
             else
-                sed -i -e 's/#%%global ghc_name/%global ghc_name/' -e s/'\(%global ghc_name ghc\).*'/'\1'"$ghc"/ haskell-language-server.spec
+                sed -i -e 's/#%%global ghc_major/%global ghc_major/' -e s/'\(%global ghc_major \).*'/'\1'"$ghc"/ haskell-language-server.spec
             fi
             case $ghc in
                 9.8) LATEST=9.8.1 ;;
@@ -49,10 +51,13 @@ for br in $branches; do
             fi
             echo "$ghcversion"
             sed -i -e "s/%global ghc_minor .*/%global ghc_minor $ghcversion/" haskell-language-server.spec
-            ghc_name=$(grep '%global ghc_name' haskell-language-server.spec)
-            echo "$ghc_name"
-            if [ "$ghc_name" = "%global ghc_name ghc" ]; then
-                echo "Illegal ghc_name!"
+            ghc_major=$(grep '%global ghc_major' haskell-language-server.spec)
+            case "$ghc_major" in
+                "#%%global ghc_major "*) ;;
+                *) echo "$ghc_major" ;;
+            esac
+            if [ "$ghc_major" = "%global ghc_major " ]; then
+                echo "Illegal ghc_major!"
                 exit 1
             else
                 fbrnch copr haskell-language-server $br $ARCHOPT
