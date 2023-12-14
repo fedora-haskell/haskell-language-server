@@ -24,7 +24,7 @@ for br in $branches; do
 #    for arch in "-a x86_64" "-X x86_64 -R"; do
 #    for arch in "-R"; do
         for ghc in "${versions[@]}"; do
-          if [ "$br" != "f37" -a "$br" != "epel9" -o "$ghc" != "8.10" ]; then
+          if ! [ "$br" = "epel9" -a -z "$ghc" ]; then
             echo
             if [[ -z "$ghc" ]]; then
                 if grep -q '^%global ghc_major' haskell-language-server.spec; then
