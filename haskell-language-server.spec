@@ -147,7 +147,9 @@ BuildRequires:  ghc-vector-devel
 # for missing dep 'algebraic-graphs':
 BuildRequires:  ghc-array-devel
 # for missing dep 'apply-refact':
+%if %{defined fedora}
 BuildRequires:  ghc-filemanip-devel
+%endif
 BuildRequires:  ghc-refact-devel
 BuildRequires:  ghc-syb-devel
 BuildRequires:  ghc-uniplate-devel
@@ -175,7 +177,9 @@ BuildRequires:  ghc-haskell-src-exts-devel
 BuildRequires:  ghc-Cabal-syntax-devel
 %endif
 BuildRequires:  ghc-Diff-devel
+%if %{defined fedora}
 BuildRequires:  ghc-MemoTrie-devel
+%endif
 BuildRequires:  ghc-ansi-terminal-devel
 BuildRequires:  ghc-array-devel
 BuildRequires:  ghc-file-embed-devel
@@ -188,7 +192,9 @@ BuildRequires:  ghc-th-env-devel
 %endif
 BuildRequires:  ghc-yaml-devel
 # for missing dep 'fuzzy':
+%if %{defined fedora}
 BuildRequires:  ghc-monoid-subclasses-devel
+%endif
 # for missing dep 'generic-lens':
 BuildRequires:  ghc-profunctors-devel
 # for missing dep 'ghc-check':
@@ -320,15 +326,19 @@ BuildRequires:  ghc-yaml-devel
 # for missing dep 'integer-conversion':
 BuildRequires:  ghc-primitive-devel
 # for missing dep 'list-t':
+%if %{defined fedora}
 BuildRequires:  ghc-foldl-devel
 BuildRequires:  ghc-logict-devel
+%endif
 BuildRequires:  ghc-mmorph-devel
 BuildRequires:  ghc-monad-control-devel
 BuildRequires:  ghc-transformers-base-devel
 # for missing dep 'lsp':
 BuildRequires:  ghc-attoparsec-devel
 BuildRequires:  ghc-exceptions-devel
+%if %{defined fedora}
 BuildRequires:  ghc-lens-aeson-devel
+%endif
 BuildRequires:  ghc-random-devel
 %if %{defined fedora}
 BuildRequires:  ghc-uuid-devel
@@ -342,7 +352,9 @@ BuildRequires:  ghc-indexed-traversable-devel
 %if 0%{?fedora} >= 38
 BuildRequires:  ghc-indexed-traversable-instances-devel
 %endif
+%if %{defined fedora}
 BuildRequires:  ghc-lens-aeson-devel
+%endif
 BuildRequires:  ghc-network-uri-devel
 BuildRequires:  ghc-safe-devel
 %if 0%{?fedora} >= 38
@@ -358,23 +370,27 @@ BuildRequires:  ghc-ghc-bignum-devel
 BuildRequires:  ghc-primitive-devel
 BuildRequires:  ghc-vector-devel
 # for missing dep 'monad-dijkstra':
+%if %{defined fedora}
 BuildRequires:  ghc-free-devel
 BuildRequires:  ghc-psqueues-devel
+%endif
 # for missing dep 'opentelemetry':
 BuildRequires:  ghc-exceptions-devel
 # for missing dep 'primitive-extras':
 BuildRequires:  ghc-cereal-devel
 %if 0%{?fedora} >= 39
 BuildRequires:  ghc-deferred-folds-devel
-%endif
 BuildRequires:  ghc-foldl-devel
+%endif
 BuildRequires:  ghc-primitive-devel
 BuildRequires:  ghc-profunctors-devel
 BuildRequires:  ghc-vector-devel
 # for missing dep 'primitive-unlifted':
 BuildRequires:  ghc-array-devel
 BuildRequires:  ghc-primitive-devel
+%if %{defined fedora}
 BuildRequires:  ghc-text-short-devel
+%endif
 # for missing dep 'process-extras':
 BuildRequires:  ghc-generic-deriving-devel
 # for missing dep 'random-shuffle':
@@ -417,11 +433,17 @@ BuildRequires:  ghc-template-haskell-devel
 BuildRequires:  ghc-time-devel
 # for missing dep 'stan':
 BuildRequires:  ghc-array-devel
+%if %{defined fedora}
 BuildRequires:  ghc-base64-devel
+%endif
 BuildRequires:  ghc-blaze-html-devel
+%if %{defined fedora}
 BuildRequires:  ghc-colourista-devel
+%endif
 BuildRequires:  ghc-pretty-simple-devel
+%if %{defined fedora}
 BuildRequires:  ghc-relude-devel
+%endif
 # for missing dep 'stm-containers':
 %if 0%{?fedora} >= 39
 BuildRequires:  ghc-deferred-folds-devel
@@ -444,7 +466,9 @@ BuildRequires:  ghc-megaparsec-devel
 BuildRequires:  ghc-parser-combinators-devel
 BuildRequires:  ghc-time-devel
 # for missing dep 'trial':
+%if %{defined fedora}
 BuildRequires:  ghc-colourista-devel
+%endif
 BuildRequires:  ghc-dlist-devel
 %endif
 # End cabal-rpm deps
