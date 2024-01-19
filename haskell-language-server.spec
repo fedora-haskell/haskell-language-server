@@ -506,18 +506,6 @@ Requires: %{ghc_prefix} = %{ghc_version}
 %endif
 Recommends: cabal-install
 #Recommends: stack
-%if %{defined ghc_name}
-%if %[v"%{ghc_version}" > v"9.2"]
-Obsoletes: haskell-language-server-%{ghc_name}-9.2.4 < %{version}-%{release}
-%elif %[v"%{ghc_version}" > v"9.0"]
-Obsoletes: haskell-language-server-%{ghc_name}-9.0.2 < %{version}-%{release}
-%else
-Obsoletes: haskell-language-server-%{ghc_name}-8.10.7 < %{version}-%{release}
-Obsoletes: haskell-language-server-8.10.7 < %{version}-%{release}
-%endif
-%else
-Obsoletes: haskell-language-server-%{?ghc_version} < %{version}-%{release}
-%endif
 
 %description
 The Haskell language server (LSP) built for GHC %{ghc_version}.
