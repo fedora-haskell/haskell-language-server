@@ -35,7 +35,7 @@ for br in $branches; do
             fi
             case $ghc in
                 9.8) LATEST=9.8.1 ;;
-                9.6) LATEST=9.6.3 ;;
+                9.6) LATEST=9.6.4 ;;
                 9.4) LATEST=9.4.8 ;;
                 9.2) LATEST=9.2.8 ;;
                 9.0) LATEST=9.0.2 ;;
