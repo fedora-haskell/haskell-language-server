@@ -31,7 +31,7 @@
 %global executable %{pkg_name}-%{ghc_version}
 
 Name:           %{pkg_name}%{?ghc_name:-%{ghc_name}}
-Version:        2.5.0.0
+Version:        2.6.0.0
 Release:        1%{?dist}.ghc%{ghc_minor}
 Summary:        LSP server for GHC %{ghc_version}
 
@@ -43,6 +43,7 @@ Source0:        https://hackage.haskell.org/package/%{pkgver}/%{pkgver}.tar.gz
 Provides:       haskell-language-server-ghc-%{ghc_version} = %{version}-%{release}
 
 # Begin cabal-rpm deps:
+# see below for ghc-Cabal-devel
 BuildRequires:  ghc-rpm-macros
 %if %{defined ghc_name}
 BuildRequires:  %{ghc_name} = %{ghc_minor}
@@ -105,6 +106,7 @@ BuildRequires:  ghc-hashable-devel
 #BuildRequires:  ghc-hls-refactor-plugin-devel
 #BuildRequires:  ghc-hls-rename-plugin-devel
 #BuildRequires:  ghc-hls-retrie-plugin-devel
+#BuildRequires:  ghc-hls-semantic-tokens-plugin-devel
 #BuildRequires:  ghc-hls-splice-plugin-devel
 #BuildRequires:  ghc-hls-stan-plugin-devel
 #BuildRequires:  ghc-hls-stylish-haskell-plugin-devel
@@ -166,6 +168,10 @@ BuildRequires:  ghc-template-haskell-devel
 %if 0%{?fedora} >= 38
 BuildRequires:  ghc-some-devel
 %endif
+# for missing dep 'extensions':
+BuildRequires:  ghc-Cabal-devel
+BuildRequires:  ghc-colourista-devel
+BuildRequires:  ghc-parsec-devel
 # for missing dep 'floskell':
 BuildRequires:  ghc-ansi-wl-pprint-devel
 BuildRequires:  ghc-attoparsec-devel
@@ -310,6 +316,10 @@ BuildRequires:  ghc-syb-devel
 BuildRequires:  ghc-time-devel
 # for missing dep 'hls-rename-plugin':
 BuildRequires:  ghc-syb-devel
+# for missing dep 'hls-semantic-tokens-plugin':
+BuildRequires:  ghc-array-devel
+BuildRequires:  ghc-syb-devel
+BuildRequires:  ghc-template-haskell-devel
 # for missing dep 'hls-splice-plugin':
 BuildRequires:  ghc-dlist-devel
 %if %{defined fedora}
@@ -580,6 +590,9 @@ rm %{buildroot}%{_bindir}/haskell-language-server-wrapper
 
 
 %changelog
+* Fri Jan 19 2024 Jens Petersen <petersen@redhat.com> - 2.6.0.0-1.ghc%{ghc_minor}
+- https://hackage.haskell.org/package/haskell-language-server-2.6.0.0/changelog
+
 * Mon Dec 11 2023 Jens Petersen <petersen@redhat.com> - 2.5.0.0-1.ghc%{ghc_minor}
 - https://hackage.haskell.org/package/haskell-language-server-2.5.0.0/changelog
 
