@@ -48,6 +48,7 @@ for br in $branches; do
             ghcversion=$(fdrq $br --qf "%{version}" --latest-limit 1 ghc$ghc)
             if [ -n "$LATEST" -a "$ghcversion" != "$LATEST" ]; then
                 echo "repo ghc$ghc-$ghcversion /= $LATEST"
+                exit 1
             fi
             echo "$ghcversion"
             sed -i -e "s/%global ghc_minor .*/%global ghc_minor $ghcversion/" haskell-language-server.spec
