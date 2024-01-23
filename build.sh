@@ -3,14 +3,14 @@
 set -e +x
 
 if [[ "$1" = "-h" ]]; then
-    echo "Usage: ./build.sh [BRANCH] [VERSION]..."
+    echo "Usage: ./build.sh [-h] [BRANCH|-l] [VERSION]..."
     exit 1
 fi
 
 branches=${1:-rawhide f39 f38 epel9}
 
 if [[ $# -lt 2 ]]; then
-    versions=('' 9.6 9.4 9.2)
+    versions=('' 9.8 9.6 9.4 9.2)
 else
     shift
     versions=("$@")
@@ -45,7 +45,11 @@ for br in $branches; do
                    exit 1
                    ;;
             esac
-            ghcversion=$(fdrq $br --qf "%{version}" --latest-limit 1 ghc$ghc)
+            if [ "$br" = "-l" ]; then
+                ghcversion=$(rpmquery --qf "%{version}" ghc$ghc)
+            else
+                ghcversion=$(fdrq $br --qf "%{version}" --latest-limit 1 ghc$ghc)
+            fi
             if [ -n "$LATEST" -a "$ghcversion" != "$LATEST" ]; then
                 echo "repo ghc$ghc-$ghcversion /= $LATEST"
                 exit 1
@@ -61,7 +65,11 @@ for br in $branches; do
                 echo "Illegal ghc_major!"
                 exit 1
             else
-                fbrnch copr haskell-language-server $br $ARCHOPT
+                if [ "$br" = "-l" ]; then
+                    fbrnch local
+                else
+                    fbrnch copr haskell-language-server $br $ARCHOPT
+                fi
             fi
           fi
         done
