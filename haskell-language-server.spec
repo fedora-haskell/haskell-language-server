@@ -486,7 +486,9 @@ BuildRequires:  ghc-dlist-devel
 %if %[v"%{ghc_version}" < v"9.4"]
 BuildRequires: gcc-c++
 %endif
-%if %[v"%{ghc_version}" > v"9.4"]
+%if %[v"%{ghc_version}" > v"9.8"]
+BuildRequires:  cabal-install > 3.10
+%elif %[v"%{ghc_version}" > v"9.4"]
 BuildRequires:  cabal-install > 3.8
 %elif %[v"%{ghc_version}" > v"9.2"]
 BuildRequires:  cabal-install > 3.6
