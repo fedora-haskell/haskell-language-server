@@ -7,7 +7,7 @@ if [[ "$1" = "-h" ]]; then
     exit 1
 fi
 
-branches=${1:-rawhide f39 f38 epel9}
+branches=${1:-rawhide f40 f39 f38 epel9}
 
 if [[ $# -lt 2 ]]; then
     versions=('' 9.8 9.6 9.4 9.2)
@@ -34,7 +34,7 @@ for br in $branches; do
                 sed -i -e 's/#%%global ghc_major/%global ghc_major/' -e s/'\(%global ghc_major \).*'/'\1'"$ghc"/ haskell-language-server.spec
             fi
             case $ghc in
-                9.8) LATEST=9.8.1 ;;
+                9.8) LATEST=9.8.2 ;;
                 9.6) LATEST=9.6.4 ;;
                 9.4) LATEST=9.4.8 ;;
                 9.2) LATEST=9.2.8 ;;
