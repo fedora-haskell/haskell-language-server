@@ -3,10 +3,11 @@
 
 import Control.Monad (forM_, when)
 import Data.Either (partitionEithers)
+import Data.List ((\\))
 import Data.Maybe (mapMaybe)
 import Data.Tuple (swap)
 import Data.Version.Extra
-import Distribution.Fedora.Branch
+import Distribution.Fedora.Branch (Branch(..), eitherBranch, getFedoraBranches)
 import SimpleCmd
 import SimpleCmdArgs
 
@@ -22,24 +23,33 @@ allArchs = [X86_64, AARCH64, PPC64LE]
 
 -- FIXME default branches to: rawhide f40 f39 f38 epel9
 -- FIXME default versions to: main 9.8 9.6 9.4 9.2 (for latest hls)
-run dryrun archs (brs,ghcs) =
-  forM_ brs $ \br ->
-  forM_ (if null ghcs then defaultGHCs else ghcs) $ \ghc -> do
-  putChar '\n'
-  putStrLn $ "=" +-+ show br +-+ showGHCPkg ghc
-  version <- cmd "fdrq" ["-q", (show br), "--qf=%{version}", "--latest-limit=1", showGHCPkg ghc]
-  putStrLn version
-  let ghcversion = readVersion version
-  when (ghc /= GHC) $ do
-    let latest = latestGHC ghc
-    when (ghcversion /= latest) $
-      error' $ showGHCPkg ghc ++ '-' : showVersion ghcversion +-+ "is not" +-+ showVersion latest
-  switchGhcMajor ghc
-  ghcmajor <- cmd "grep" ["%global ghc_major", specFile]
-  putStrLn ghcmajor
-  -- FIXME check ghcmajor
-  sed ["s/%global ghc_minor .*/%global ghc_minor " ++ version ++ "/"]
-  cmdLog_ "fbrnch" $ "copr" : ["-n" | dryrun] ++ ["--single", "haskell-language-server", show br] ++ map archOpt (mapMaybe (maybeGHCArchs ghc) $ if null archs then [X86_64,AARCH64] else archs)
+run dryrun archs (brs,ghcs) = do
+  branches <-
+    if null brs
+    then do
+      allbrs <- getFedoraBranches
+      return $ allbrs \\ [EPEL 8, EPELNext 8, EPELNext 9]
+    else return brs
+  forM_ branches $ \br ->
+    forM_ (if null ghcs then defaultGHCs else ghcs) $ \ghc -> do
+    putChar '\n'
+    putStrLn $ "=" +-+ show br +-+ showGHCPkg ghc
+    version <- cmd "fdrq" ["-q", (show br), "--qf=%{version}", "--latest-limit=1", showGHCPkg ghc]
+    if null version
+      then error' $ showGHCPkg ghc +-+ "not found" +-+ "for" +-+ show br
+      else do
+      putStrLn version
+      let ghcversion = readVersion version
+      when (ghc /= GHC) $ do
+        let latest = latestGHC ghc
+        when (ghcversion /= latest) $
+          error' $ showGHCPkg ghc ++ '-' : showVersion ghcversion +-+ "is not" +-+ showVersion latest
+      switchGhcMajor ghc
+      ghcmajor <- cmd "grep" ["%global ghc_major", specFile]
+      putStrLn ghcmajor
+      -- FIXME check ghcmajor
+      sed ["s/%global ghc_minor .*/%global ghc_minor " ++ version ++ "/"]
+      cmdLog_ "fbrnch" $ "copr" : ["-n" | dryrun] ++ ["--single", "haskell-language-server", show br] ++ map archOpt (mapMaybe (maybeGHCArchs ghc) $ if null archs then [X86_64,AARCH64] else archs)
 
 switchGhcMajor :: GHCPKG -> IO ()
 switchGhcMajor GHC =
