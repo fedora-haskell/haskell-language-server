@@ -31,7 +31,7 @@
 %global executable %{pkg_name}-%{ghc_version}
 
 Name:           %{pkg_name}%{?ghc_name:-%{ghc_name}}
-Version:        2.8.0.0
+Version:        2.9.0.0
 Release:        1%{?dist}.ghc%{ghc_minor}
 Summary:        LSP server for GHC %{ghc_version}
 
@@ -62,7 +62,9 @@ BuildRequires:  ghc-aeson-devel
 BuildRequires:  ghc-aeson-pretty-devel
 #BuildRequires:  ghc-apply-refact-devel
 BuildRequires:  ghc-array-devel
+BuildRequires:  ghc-async-devel
 BuildRequires:  ghc-base-devel
+BuildRequires:  ghc-binary-devel
 BuildRequires:  ghc-bytestring-devel
 BuildRequires:  ghc-containers-devel
 BuildRequires:  ghc-data-default-devel
@@ -92,10 +94,12 @@ BuildRequires:  ghc-hashable-devel
 BuildRequires:  ghc-hlint-devel
 #BuildRequires:  ghc-hls-graph-devel
 #BuildRequires:  ghc-hls-plugin-api-devel
+#BuildRequires:  ghc-hls-test-utils-devel
 %if %{defined fedora}
 BuildRequires:  ghc-lens-devel
 %endif
 #BuildRequires:  ghc-lsp-devel
+#BuildRequires:  ghc-lsp-test-devel
 #BuildRequires:  ghc-lsp-types-devel
 BuildRequires:  ghc-megaparsec-devel
 #BuildRequires:  ghc-mod-devel
@@ -120,12 +124,14 @@ BuildRequires:  ghc-regex-tdfa-devel
 BuildRequires:  ghc-safe-exceptions-devel
 %endif
 BuildRequires:  ghc-semigroupoids-devel
+BuildRequires:  ghc-shake-devel
 #BuildRequires:  ghc-sqlite-simple-devel
 #BuildRequires:  ghc-stan-devel
 BuildRequires:  ghc-stm-devel
 #BuildRequires:  ghc-stm-containers-devel
 #BuildRequires:  ghc-stylish-haskell-devel
 BuildRequires:  ghc-syb-devel
+BuildRequires:  ghc-tasty-hunit-devel
 BuildRequires:  ghc-template-haskell-devel
 BuildRequires:  ghc-temporary-devel
 BuildRequires:  ghc-text-devel
@@ -138,6 +144,7 @@ BuildRequires:  ghc-unliftio-devel
 BuildRequires:  ghc-unliftio-core-devel
 BuildRequires:  ghc-unordered-containers-devel
 BuildRequires:  ghc-vector-devel
+BuildRequires:  ghc-yaml-devel
 # hls --version output includes (buildroot) path
 #BuildRequires:  help2man
 BuildRequires:  cabal-install > 1.18
@@ -157,6 +164,10 @@ BuildRequires:  ghc-unix-compat-devel
 BuildRequires:  ghc-attoparsec-devel
 BuildRequires:  ghc-primitive-devel
 BuildRequires:  ghc-scientific-devel
+# for missing dep 'conduit-parse':
+BuildRequires:  ghc-conduit-devel
+BuildRequires:  ghc-parsers-devel
+BuildRequires:  ghc-safe-devel
 # for missing dep 'constraints-extras':
 BuildRequires:  ghc-constraints-devel
 # for missing dep 'dependent-sum':
@@ -178,14 +189,12 @@ BuildRequires:  ghc-haskell-src-exts-devel
 BuildRequires:  ghc-MemoTrie-devel
 %endif
 BuildRequires:  ghc-ansi-terminal-devel
-BuildRequires:  ghc-binary-devel
 BuildRequires:  ghc-file-embed-devel
 BuildRequires:  ghc-scientific-devel
 BuildRequires:  ghc-terminal-size-devel
 %if %{defined fedora}
 BuildRequires:  ghc-th-env-devel
 %endif
-BuildRequires:  ghc-yaml-devel
 # for missing dep 'fuzzy':
 %if %{defined fedora}
 BuildRequires:  ghc-monoid-subclasses-devel
@@ -196,9 +205,7 @@ BuildRequires:  ghc-QuickCheck-devel
 BuildRequires:  ghc-profunctors-devel
 # for missing dep 'ghcide':
 BuildRequires:  ghc-Glob-devel
-BuildRequires:  ghc-async-devel
 BuildRequires:  ghc-base16-bytestring-devel
-BuildRequires:  ghc-binary-devel
 BuildRequires:  ghc-case-insensitive-devel
 BuildRequires:  ghc-cryptohash-sha1-devel
 BuildRequires:  ghc-exceptions-devel
@@ -220,7 +227,6 @@ BuildRequires:  ghc-cryptohash-sha1-devel
 BuildRequires:  ghc-exceptions-devel
 BuildRequires:  ghc-file-embed-devel
 BuildRequires:  ghc-unix-compat-devel
-BuildRequires:  ghc-yaml-devel
 # for missing dep 'hiedb':
 BuildRequires:  ghc-ansi-terminal-devel
 BuildRequires:  ghc-ghc-paths-devel
@@ -229,7 +235,6 @@ BuildRequires:  ghc-lucid-devel
 BuildRequires:  ghc-terminal-size-devel
 %endif
 # for missing dep 'hls-graph':
-BuildRequires:  ghc-async-devel
 BuildRequires:  ghc-exceptions-devel
 BuildRequires:  ghc-js-dgtable-devel
 BuildRequires:  ghc-js-flot-devel
@@ -238,12 +243,15 @@ BuildRequires:  ghc-js-jquery-devel
 %if %{defined fedora}
 BuildRequires:  ghc-lens-aeson-devel
 %endif
+# for missing dep 'hls-test-utils':
+BuildRequires:  ghc-neat-interpolation-devel
+BuildRequires:  ghc-tasty-devel
+BuildRequires:  ghc-tasty-rerun-devel
 # for missing dep 'hw-prim':
 BuildRequires:  ghc-mmap-devel
 # for missing dep 'implicit-hie':
 BuildRequires:  ghc-attoparsec-devel
 BuildRequires:  ghc-filepattern-devel
-BuildRequires:  ghc-yaml-devel
 # for missing dep 'integer-conversion':
 BuildRequires:  ghc-primitive-devel
 # for missing dep 'list-t':
@@ -254,13 +262,18 @@ BuildRequires:  ghc-mmorph-devel
 BuildRequires:  ghc-monad-control-devel
 BuildRequires:  ghc-transformers-base-devel
 # for missing dep 'lsp':
-BuildRequires:  ghc-async-devel
 BuildRequires:  ghc-attoparsec-devel
 BuildRequires:  ghc-exceptions-devel
 BuildRequires:  ghc-lens-aeson-devel
+# for missing dep 'lsp-test':
+BuildRequires:  ghc-Glob-devel
+BuildRequires:  ghc-ansi-terminal-devel
+BuildRequires:  ghc-conduit-devel
+BuildRequires:  ghc-exceptions-devel
+BuildRequires:  ghc-lens-aeson-devel
+BuildRequires:  ghc-some-devel
 # for missing dep 'lsp-types':
 BuildRequires:  ghc-QuickCheck-devel
-BuildRequires:  ghc-binary-devel
 BuildRequires:  ghc-file-embed-devel
 BuildRequires:  ghc-indexed-traversable-devel
 %if 0%{defined fedora}
@@ -328,7 +341,6 @@ BuildRequires:  ghc-utf8-string-devel
 BuildRequires:  ghc-regex-base-devel
 # for missing dep 'retrie':
 BuildRequires:  ghc-ansi-terminal-devel
-BuildRequires:  ghc-async-devel
 BuildRequires:  ghc-ghc-paths-devel
 %if %{defined fedora}
 BuildRequires:  ghc-haskell-src-exts-devel
@@ -372,6 +384,14 @@ BuildRequires:  ghc-Cabal-devel
 BuildRequires:  ghc-HsYAML-devel
 BuildRequires:  ghc-file-embed-devel
 BuildRequires:  ghc-strict-devel
+# for missing dep 'tasty-expected-failure':
+BuildRequires:  ghc-tagged-devel
+BuildRequires:  ghc-tasty-devel
+BuildRequires:  ghc-unbounded-delays-devel
+# for missing dep 'tasty-golden':
+BuildRequires:  ghc-tagged-devel
+BuildRequires:  ghc-tasty-devel
+BuildRequires:  ghc-typed-process-devel
 # for missing dep 'trial':
 %if %{defined fedora}
 BuildRequires:  ghc-colourista-devel
@@ -477,6 +497,9 @@ rm %{buildroot}%{_bindir}/haskell-language-server-wrapper
 
 
 %changelog
+* Fri Jul 12 2024 Jens Petersen <petersen@redhat.com> - 2.9.0.0-1.ghc%{ghc_minor}
+- https://hackage.haskell.org/package/haskell-language-server-2.9.0.0/changelog
+
 * Fri Jul 12 2024 Jens Petersen <petersen@redhat.com> - 2.8.0.0-1.ghc%{ghc_minor}
 - https://hackage.haskell.org/package/haskell-language-server-2.8.0.0/changelog
 
