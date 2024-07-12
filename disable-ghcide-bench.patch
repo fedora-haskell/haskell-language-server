@@ -1,0 +1,10 @@
+--- haskell-language-server-2.9.0.0/haskell-language-server.cabal~	2024-07-12 21:10:04.691061839 +0800
++++ haskell-language-server-2.9.0.0/haskell-language-server.cabal	2024-07-12 21:12:58.333929660 +0800
+@@ -2219,6 +2219,7 @@
+         OverloadedStrings
+         RecordWildCards
+         ViewPatterns
++    buildable: False
+ 
+ library ghcide-bench-lib
+     default-language: GHC2021

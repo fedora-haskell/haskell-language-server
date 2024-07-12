@@ -40,6 +40,8 @@ Url:            https://hackage.haskell.org/package/%{pkg_name}
 # Begin cabal-rpm sources:
 Source0:        https://hackage.haskell.org/package/%{pkgver}/%{pkgver}.tar.gz
 # End cabal-rpm sources
+# https://github.com/haskell/haskell-language-server/issues/4359
+Patch0:         disable-ghcide-bench.patch
 Provides:       haskell-language-server-ghc-%{ghc_version} = %{version}-%{release}
 
 # Begin cabal-rpm deps:
@@ -449,6 +451,7 @@ Please see the README on GitHub at
 # Begin cabal-rpm setup:
 %setup -q -n %{pkgver}
 # End cabal-rpm setup
+%autopatch -p1
 cabal-tweak-flag dynamic False
 
 %if %[v"%{ghc_version}" < v"9.4"]
