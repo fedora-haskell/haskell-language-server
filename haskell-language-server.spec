@@ -458,12 +458,11 @@ cabal-tweak-flag dynamic False
 cabal-tweak-flag hlint False
 %endif
 
-cabal update %{!?_with_compiler_default:-w ghc-%{ghc_version}}
-
 
 %build
 # Begin cabal-rpm build:
 # End cabal-rpm build
+cabal update %{!?_with_compiler_default:-w ghc-%{ghc_version}}
 
 
 %install
