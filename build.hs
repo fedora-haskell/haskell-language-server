@@ -86,7 +86,7 @@ ghcVersion Rawhide = makeVersion [9,4,5]
 
 latestGHC :: GHCPKG -> Version
 latestGHC GHC9_8 = makeVersion [9,8,2]
-latestGHC GHC9_6 = makeVersion [9,6,5]
+latestGHC GHC9_6 = makeVersion [9,6,6]
 latestGHC GHC9_4 = makeVersion [9,4,8]
 latestGHC GHC9_2 = makeVersion [9,2,8]
 latestGHC GHC9_0 = makeVersion [9,0,2]
