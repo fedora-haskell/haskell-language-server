@@ -1,7 +1,7 @@
 #!/usr/bin/env stack
 -- stack --resolver lts-21.25 script
 
-import Control.Monad (forM_, when)
+import Control.Monad (forM_, unless, when)
 import Data.Either (partitionEithers)
 import Data.List ((\\))
 import Data.Maybe (mapMaybe)
@@ -20,20 +20,20 @@ main =
 
 defaultGHCs = [GHC, GHC9_8, GHC9_6, GHC9_4, GHC9_2]
 allArchs = [X86_64, AARCH64, PPC64LE]
+defaultArchs = [X86_64, AARCH64]
 
--- FIXME default branches to: rawhide f40 f39 f38 epel9
--- FIXME default versions to: main 9.8 9.6 9.4 9.2 (for latest hls)
-run dryrun archs (brs,ghcs) = do
+run dryrun reqarchs (reqbrs,reqghcs) = do
   branches <-
-    if null brs
+    if null reqbrs
     then do
       allbrs <- getFedoraBranches
       return $ allbrs \\ [EPEL 8, EPELNext 8, EPELNext 9]
-    else return brs
+    else return reqbrs
+  let ghcs = if null reqghcs then defaultGHCs else reqghcs
   forM_ branches $ \br ->
-    forM_ (if null ghcs then defaultGHCs else ghcs) $ \ghc -> do
+    forM_ ghcs $ \ghc -> do
     putChar '\n'
-    putStrLn $ "=" +-+ show br +-+ showGHCPkg ghc
+    putStrLn $ "#" +-+ show br +-+ showGHCPkg ghc
     version <- cmd "fdrq" ["-q", (show br), "--qf=%{version}", "--latest-limit=1", showGHCPkg ghc]
     if null version
       then error' $ showGHCPkg ghc +-+ "not found" +-+ "for" +-+ show br
@@ -49,7 +49,20 @@ run dryrun archs (brs,ghcs) = do
       putStrLn ghcmajor
       -- FIXME check ghcmajor
       sed ["s/%global ghc_minor .*/%global ghc_minor " ++ version ++ "/"]
-      cmdLog_ "fbrnch" $ "copr" : ["-n" | dryrun] ++ ["--single", "haskell-language-server", show br] ++ map archOpt (mapMaybe (maybeGHCArchs ghc) $ if null archs then [X86_64,AARCH64] else archs)
+      let archs =
+            if length reqarchs == 1
+            then reqarchs
+            else mapMaybe (maybeGHCArchs ghc) $
+                 if null reqarchs then defaultArchs else reqarchs
+      -- 9.4 fails to link for aarch64 with ld.gold: skip unless explicit req
+      unless (reqarchs == [AARCH64] && ghc == GHC9_4 && ghcs /= [GHC9_4]) $
+        cmdLog_ "fbrnch" $ "copr" : ["-n" | dryrun] ++ ["--single", "haskell-language-server", show br] ++ map archOpt archs
+        where
+          maybeGHCArchs :: GHCPKG -> Arch -> Maybe Arch
+          maybeGHCArchs GHC9_4 AARCH64 = Nothing
+          maybeGHCArchs _ arch = Just arch
+--            if ghcs == [GHC9_4] && (length ghcs > 1 || then Nothing else Just AARCH64
+
 
 switchGhcMajor :: GHCPKG -> IO ()
 switchGhcMajor GHC =
@@ -71,11 +84,6 @@ archOpt arch = "--arch=" ++ showArch arch
 partitionBranches :: [String] -> ([Branch],[GHCPKG])
 partitionBranches args =
   fmap (map readGHCPkg) . swap . partitionEithers $ map eitherBranch args
-
-maybeGHCArchs :: GHCPKG -> Arch -> Maybe Arch
-maybeGHCArchs ghc AARCH64 =
-  if ghc `elem` [GHC9_4,GHC9_6] then Nothing else Just AARCH64
-maybeGHCArchs _ arch = Just arch
 
 ghcVersion :: Branch -> Version
 ghcVersion (EPEL 9) = makeVersion [8,10,7]
@@ -134,6 +142,7 @@ showMajor GHC9_0 = "9.0"
 showMajor GHC8_10 = "8.10"
 
 data Arch = X86_64 | AARCH64 | PPC64LE
+  deriving Eq
 
 readArch :: String -> Arch
 readArch "x86_64" = X86_64
