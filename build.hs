@@ -15,6 +15,7 @@ main =
   simpleCmdArgs Nothing "hls builder" "hls copr builds" $
   run
   <$> switchWith 'n' "dryrun" "Show what would be done only"
+  <*> switchWith 'l' "local" "Do a local build instead"
   <*> (map readArch <$> many (strOptionWith 'a' "arch" "ARCH" "chroot archtectures"))
   <*> (partitionBranches <$> many (strArg "BRANCH... GHCMAJOR..."))
 
@@ -22,7 +23,15 @@ defaultGHCs = [GHC, GHC9_8, GHC9_6, GHC9_4, GHC9_2]
 allArchs = [X86_64, AARCH64, PPC64LE]
 defaultArchs = [X86_64, AARCH64]
 
-run dryrun reqarchs (reqbrs,reqghcs) = do
+run dryrun local reqarchs (reqbrs,reqghcs) =
+  if local
+  then
+    if null reqbrs && not (null reqghcs)
+    then runLocal dryrun reqghcs
+    else error' "can't combine --local with branches"
+  else runRemote dryrun reqarchs (reqbrs,reqghcs)
+
+runRemote dryrun reqarchs (reqbrs,reqghcs) = do
   branches <-
     if null reqbrs
     then do
@@ -62,6 +71,26 @@ run dryrun reqarchs (reqbrs,reqghcs) = do
           maybeGHCArchs _ arch = Just arch
 --            if ghcs == [GHC9_4] && (length ghcs > 1 || then Nothing else Just AARCH64
 
+runLocal dryrun reqghcs =
+  forM_ reqghcs $ \ghc -> do
+  putChar '\n'
+  putStrLn $ "#" +-+ showGHCPkg ghc
+  version <- cmd "rpm" ["-q", "--qf=%{version}", showGHCPkg ghc]
+  if null version
+    then error' $ showGHCPkg ghc +-+ "not found"
+    else do
+    putStrLn version
+    let ghcversion = readVersion version
+    when (ghc /= GHC) $ do
+      let latest = latestGHC ghc
+      when (ghcversion /= latest) $
+        error' $ showGHCPkg ghc ++ '-' : showVersion ghcversion +-+ "is not" +-+ showVersion latest
+    switchGhcMajor ghc
+    ghcmajor <- cmd "grep" ["%global ghc_major", specFile]
+    --putStrLn ghcmajor
+    -- FIXME check ghcmajor
+    sed ["s/%global ghc_minor .*/%global ghc_minor " ++ version ++ "/"]
+    cmdLog_ "fbrnch" $ "local" : ["--dryrun" | dryrun] -- FIXME no --dryrun
 
 switchGhcMajor :: GHCPKG -> IO ()
 switchGhcMajor GHC =
@@ -79,7 +108,7 @@ sed edits =
 archOpt :: Arch -> String
 archOpt arch = "--arch=" ++ showArch arch
 
--- (from fbrnch Branches)
+-- (from fbrnch Branches) different to fedora-releases
 partitionBranches :: [String] -> ([Branch],[GHCPKG])
 partitionBranches args =
   fmap (map readGHCPkg) . swap . partitionEithers $ map eitherBranch args
