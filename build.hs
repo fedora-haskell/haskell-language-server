@@ -34,7 +34,7 @@ run dryrun reqarchs (reqbrs,reqghcs) = do
     forM_ ghcs $ \ghc -> do
     putChar '\n'
     putStrLn $ "#" +-+ show br +-+ showGHCPkg ghc
-    version <- cmd "fdrq" ["-q", (show br), "--qf=%{version}", "--latest-limit=1", showGHCPkg ghc]
+    version <- cmd "frpq" ["-q", (show br), "--qf=%{version}", "--latest-limit=1", showGHCPkg ghc]
     if null version
       then error' $ showGHCPkg ghc +-+ "not found" +-+ "for" +-+ show br
       else do
