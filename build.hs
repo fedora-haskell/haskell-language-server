@@ -90,9 +90,11 @@ ghcVersion (EPEL 9) = makeVersion [8,10,7]
 ghcVersion (Fedora 38) = makeVersion [9,2,6]
 ghcVersion (Fedora 39) = makeVersion [9,4,5]
 ghcVersion (Fedora 40) = makeVersion [9,4,5]
-ghcVersion Rawhide = makeVersion [9,4,5]
+ghcVersion (Fedora 41) = makeVersion [9,6,6]
+ghcVersion Rawhide = makeVersion [9,6,6]
 
 latestGHC :: GHCPKG -> Version
+latestGHC GHC9_10 = makeVersion [9,10,1]
 latestGHC GHC9_8 = makeVersion [9,8,2]
 latestGHC GHC9_6 = makeVersion [9,6,6]
 latestGHC GHC9_4 = makeVersion [9,4,8]
@@ -101,7 +103,9 @@ latestGHC GHC9_0 = makeVersion [9,0,2]
 latestGHC GHC8_10 = makeVersion [8,10,7]
 latestGHC GHC = error' "latestGHC not valid for main ghc package"
 
-data GHCPKG = GHC | GHC9_8 | GHC9_6 | GHC9_4 | GHC9_2 | GHC9_0 | GHC8_10
+data GHCPKG = GHC
+            | GHC9_10 | GHC9_8 | GHC9_6 | GHC9_4 | GHC9_2 | GHC9_0
+            | GHC8_10
   deriving Eq
 
 readGHCPkg :: String -> GHCPKG
@@ -111,6 +115,8 @@ readGHCPkg "ghc" = GHC
 readGHCPkg ('g':'h':'c':ver) = readGHCPkg ver
 readGHCPkg ver =
   case ver of
+    "910" -> GHC9_10
+    "9.10" -> GHC9_10
     "98" -> GHC9_8
     "9.8" -> GHC9_8
     "96" -> GHC9_6
@@ -126,6 +132,7 @@ readGHCPkg ver =
     _ -> error' $ "unknown GHCVER" +-+ ver
 
 showGHCPkg GHC = "ghc"
+showGHCPkg GHC9_10 = "ghc9.10"
 showGHCPkg GHC9_8 = "ghc9.8"
 showGHCPkg GHC9_6 = "ghc9.6"
 showGHCPkg GHC9_4 = "ghc9.4"
@@ -134,6 +141,7 @@ showGHCPkg GHC9_0 = "ghc9.0"
 showGHCPkg GHC8_10 = "ghc8.10"
 
 showMajor GHC = ""
+showMajor GHC9_10 = "9.10"
 showMajor GHC9_8 = "9.8"
 showMajor GHC9_6 = "9.6"
 showMajor GHC9_4 = "9.4"
