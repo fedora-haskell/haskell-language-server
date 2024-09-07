@@ -404,6 +404,7 @@ BuildRequires:  ghc-colourista-devel
 %if %[v"%{ghc_version}" < v"9.4"]
 BuildRequires: gcc-c++
 %endif
+BuildRequires:  numactl-devel
 %if %[v"%{ghc_version}" > v"9.8"]
 BuildRequires:  cabal-install > 3.10
 %elif %[v"%{ghc_version}" > v"9.4"]
