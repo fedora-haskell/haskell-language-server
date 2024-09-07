@@ -46,7 +46,6 @@ run dryrun reqarchs (reqbrs,reqghcs) = do
           error' $ showGHCPkg ghc ++ '-' : showVersion ghcversion +-+ "is not" +-+ showVersion latest
       switchGhcMajor ghc
       ghcmajor <- cmd "grep" ["%global ghc_major", specFile]
-      putStrLn ghcmajor
       -- FIXME check ghcmajor
       sed ["s/%global ghc_minor .*/%global ghc_minor " ++ version ++ "/"]
       let archs =
