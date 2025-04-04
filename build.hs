@@ -66,15 +66,16 @@ runRemote dryrun reqarchs (reqbrs,reqghcs) = do
         let archs =
               if length reqarchs == 1
               then reqarchs
-              else mapMaybe (maybeGHCArchs ghc) $
+              else mapMaybe (maybeGHCArchs br ghc) $
                    if null reqarchs then defaultArchs else reqarchs
         -- 9.4 fails to link for aarch64 with ld.gold: skip unless explicit req
         unless (reqarchs == [AARCH64] && ghc == GHC9_4 && ghcs /= [GHC9_4]) $
           cmdLog_ "fbrnch" $ "copr" : ["-n" | dryrun] ++ ["--single", "haskell-language-server", showBranch br] ++ map archOpt archs
         where
-          maybeGHCArchs :: GHCPKG -> Arch -> Maybe Arch
-          maybeGHCArchs GHC9_4 AARCH64 = Nothing
-          maybeGHCArchs _ arch = Just arch
+          maybeGHCArchs :: Branch -> GHCPKG -> Arch -> Maybe Arch
+          maybeGHCArchs branch GHC9_4 AARCH64 | branch < Fedora 41 = Nothing
+          maybeGHCArchs (EPEL 9) GHC9_6 AARCH64 = Nothing
+          maybeGHCArchs _ _ arch = Just arch
 --            if ghcs == [GHC9_4] && (length ghcs > 1 || then Nothing else Just AARCH64
 
 runLocal dryrun reqghcs =
