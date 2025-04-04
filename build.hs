@@ -20,7 +20,11 @@ main =
   <*> (map readArch <$> many (strOptionWith 'a' "arch" "ARCH" "chroot archtectures"))
   <*> (partitionBranches <$> many (strArg "BRANCH... GHCMAJOR..."))
 
-defaultGHCs = [GHC, GHC9_8, GHC9_6, GHC9_4, GHC9_2]
+-- https://haskell-language-server.readthedocs.io/en/latest/support/ghc-version-support.html
+-- minimum listed GHC version: 9.4
+-- 9.2 fails to build ghcide
+-- 9.12 bounds for ghc-trace-event (for opentelemetry)
+defaultGHCs = [GHC, GHC9_10, GHC9_8, GHC9_6, GHC9_4]
 allArchs = [X86_64, AARCH64, PPC64LE]
 defaultArchs = [X86_64, AARCH64]
 
@@ -37,38 +41,36 @@ runRemote dryrun reqarchs (reqbrs,reqghcs) = do
     if null reqbrs
     then do
       allbrs <- getActiveBranches
-      return $ allbrs \\ [EPEL 8, EPELNext 8, EPELNext 9]
+      return $ allbrs \\ [EPEL 8, EPELNext 8, EPELNext 9, EPEL 10, EPELNext 10]
     else return reqbrs
   let ghcs = if null reqghcs then defaultGHCs else reqghcs
-  forM_ branches $ \br ->
-    forM_ ghcs $ \ghc ->
-    if ghc `elem` [GHC] && br == EPEL 9
-    then putStrLn $ "skipping" +-+ showBranch br +-+ showGHCPkg ghc
-    else do
-    putChar '\n'
-    putStrLn $ "#" +-+ showBranch br +-+ showGHCPkg ghc
-    version <- cmd "frpq" ["-q", (showBranch br), "--qf=%{version}", "--latest-limit=1", showGHCPkg ghc]
-    if null version
-      then error' $ showGHCPkg ghc +-+ "not found" +-+ "for" +-+ showBranch br
-      else do
-      putStrLn version
-      let ghcversion = readVersion version
-      when (ghc /= GHC) $ do
-        let latest = latestGHC ghc
-        when (ghcversion /= latest) $
-          error' $ showGHCPkg ghc ++ '-' : showVersion ghcversion +-+ "is not" +-+ showVersion latest
-      switchGhcMajor ghc
-      ghcmajor <- cmd "grep" ["%global ghc_major", specFile]
-      -- FIXME check ghcmajor
-      sed ["s/%global ghc_minor .*/%global ghc_minor " ++ version ++ "/"]
-      let archs =
-            if length reqarchs == 1
-            then reqarchs
-            else mapMaybe (maybeGHCArchs ghc) $
-                 if null reqarchs then defaultArchs else reqarchs
-      -- 9.4 fails to link for aarch64 with ld.gold: skip unless explicit req
-      unless (reqarchs == [AARCH64] && ghc == GHC9_4 && ghcs /= [GHC9_4]) $
-        cmdLog_ "fbrnch" $ "copr" : ["-n" | dryrun] ++ ["--single", "haskell-language-server", showBranch br] ++ map archOpt archs
+  forM_ branches $ \br -> do
+    defaultGhcVer <- readVersion <$> cmd "frpq" ["-q", (showBranch br), "--qf=%{version}", "--latest-limit=1", "ghc"]
+    forM_ (ghcs \\ [GHC | br == EPEL 9]) $ \ghc -> do
+      putChar '\n'
+      putStrLn $ "#" +-+ showBranch br +-+ showGHCPkg ghc
+      version <- readVersion <$> cmd "frpq" ["-q", (showBranch br), "--qf=%{version}", "--latest-limit=1", showGHCPkg ghc]
+      if ghc /= GHC && version == defaultGhcVer
+        then putStrLn $ "skipping" +-+ showGHCPkg ghc ++ '-' : showVersion version
+        else do
+        putStrLn $ showVersion version
+        when (ghc /= GHC) $ do
+          let latest = latestGHC ghc
+          when (version /= latest) $
+            error' $ showGHCPkg ghc ++ '-' : showVersion version +-+ "is not" +-+ showVersion latest
+        switchGhcMajor ghc
+        ghcmajor <- cmd "grep" ["%global ghc_major", specFile]
+        --putStrLn ghcmajor
+        -- FIXME check ghcmajor
+        sed ["s/%global ghc_minor .*/%global ghc_minor " ++ showVersion version ++ "/"]
+        let archs =
+              if length reqarchs == 1
+              then reqarchs
+              else mapMaybe (maybeGHCArchs ghc) $
+                   if null reqarchs then defaultArchs else reqarchs
+        -- 9.4 fails to link for aarch64 with ld.gold: skip unless explicit req
+        unless (reqarchs == [AARCH64] && ghc == GHC9_4 && ghcs /= [GHC9_4]) $
+          cmdLog_ "fbrnch" $ "copr" : ["-n" | dryrun] ++ ["--single", "haskell-language-server", showBranch br] ++ map archOpt archs
         where
           maybeGHCArchs :: GHCPKG -> Arch -> Maybe Arch
           maybeGHCArchs GHC9_4 AARCH64 = Nothing
@@ -79,22 +81,20 @@ runLocal dryrun reqghcs =
   forM_ reqghcs $ \ghc -> do
   putChar '\n'
   putStrLn $ "#" +-+ showGHCPkg ghc
-  version <- cmd "rpm" ["-q", "--qf=%{version}", showGHCPkg ghc]
-  if null version
-    then error' $ showGHCPkg ghc +-+ "not found"
-    else do
-    putStrLn version
-    let ghcversion = readVersion version
-    when (ghc /= GHC) $ do
-      let latest = latestGHC ghc
-      when (ghcversion /= latest) $
-        error' $ showGHCPkg ghc ++ '-' : showVersion ghcversion +-+ "is not" +-+ showVersion latest
+  version <- readVersion <$> cmd "rpm" ["-q", "--qf=%{version}", showGHCPkg ghc]
+  putStrLn $ showVersion version
+  when (ghc /= GHC) $ do
+    let latest = latestGHC ghc
+    when (version /= latest) $
+      error' $ showGHCPkg ghc ++ '-' : showVersion version +-+ "is not" +-+ showVersion latest
     switchGhcMajor ghc
     ghcmajor <- cmd "grep" ["%global ghc_major", specFile]
     --putStrLn ghcmajor
     -- FIXME check ghcmajor
-    sed ["s/%global ghc_minor .*/%global ghc_minor " ++ version ++ "/"]
-    cmdLog_ "fbrnch" $ "local" : ["--dryrun" | dryrun] -- FIXME no --dryrun
+    sed ["s/%global ghc_minor .*/%global ghc_minor " ++ showVersion version ++ "/"]
+    when dryrun $ error' "--local does not support --dryrun"
+    -- FIXME need to unset GHC_PACKAGE_PATH
+    cmdLog_ "fbrnch" $ "local" : []
 
 switchGhcMajor :: GHCPKG -> IO ()
 switchGhcMajor GHC =
@@ -125,20 +125,21 @@ partitionBranches args =
 -- ghcVersion (Fedora 41) = makeVersion [9,6,6]
 -- ghcVersion Rawhide = makeVersion [9,6,6]
 
+data GHCPKG = GHC | GHC9_12
+            | GHC9_10 | GHC9_8 | GHC9_6 | GHC9_4 | GHC9_2 | GHC9_0
+            | GHC8_10
+  deriving Eq
+
 latestGHC :: GHCPKG -> Version
+latestGHC GHC9_12 = makeVersion [9,12,2]
 latestGHC GHC9_10 = makeVersion [9,10,1]
 latestGHC GHC9_8 = makeVersion [9,8,4]
-latestGHC GHC9_6 = makeVersion [9,6,7]
+latestGHC GHC9_6 = makeVersion [9,6,6] -- 9.6.7 available
 latestGHC GHC9_4 = makeVersion [9,4,8]
 latestGHC GHC9_2 = makeVersion [9,2,8]
 latestGHC GHC9_0 = makeVersion [9,0,2]
 latestGHC GHC8_10 = makeVersion [8,10,7]
 latestGHC GHC = error' "latestGHC not valid for main ghc package"
-
-data GHCPKG = GHC
-            | GHC9_10 | GHC9_8 | GHC9_6 | GHC9_4 | GHC9_2 | GHC9_0
-            | GHC8_10
-  deriving Eq
 
 readGHCPkg :: String -> GHCPKG
 readGHCPkg "main" = GHC
@@ -147,6 +148,8 @@ readGHCPkg "ghc" = GHC
 readGHCPkg ('g':'h':'c':ver) = readGHCPkg ver
 readGHCPkg ver =
   case ver of
+    "912" -> GHC9_12
+    "9.12" -> GHC9_12
     "910" -> GHC9_10
     "9.10" -> GHC9_10
     "98" -> GHC9_8
@@ -164,6 +167,7 @@ readGHCPkg ver =
     _ -> error' $ "unknown GHCVER" +-+ ver
 
 showGHCPkg GHC = "ghc"
+showGHCPkg GHC9_12 = "ghc9.12"
 showGHCPkg GHC9_10 = "ghc9.10"
 showGHCPkg GHC9_8 = "ghc9.8"
 showGHCPkg GHC9_6 = "ghc9.6"
@@ -173,6 +177,7 @@ showGHCPkg GHC9_0 = "ghc9.0"
 showGHCPkg GHC8_10 = "ghc8.10"
 
 showMajor GHC = ""
+showMajor GHC9_12 = "9.12"
 showMajor GHC9_10 = "9.10"
 showMajor GHC9_8 = "9.8"
 showMajor GHC9_6 = "9.6"
