@@ -296,13 +296,17 @@ BuildRequires:  ghc-transformers-base-devel
 # for missing dep 'lsp':
 BuildRequires:  ghc-attoparsec-devel
 BuildRequires:  ghc-exceptions-devel
+%if %{defined fedora}
 BuildRequires:  ghc-lens-aeson-devel
+%endif
 # for missing dep 'lsp-test':
 BuildRequires:  ghc-Glob-devel
 BuildRequires:  ghc-ansi-terminal-devel
 BuildRequires:  ghc-conduit-devel
 BuildRequires:  ghc-exceptions-devel
+%if %{defined fedora}
 BuildRequires:  ghc-lens-aeson-devel
+%endif
 BuildRequires:  ghc-some-devel
 # for missing dep 'lsp-types':
 BuildRequires:  ghc-QuickCheck-devel
