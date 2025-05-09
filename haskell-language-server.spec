@@ -478,9 +478,18 @@ Please see the README on GitHub at
 %patch -P0 -p1 -b .orig
 cabal-tweak-flag dynamic False
 cabal-tweak-flag test-exe False
+# in 2.11 hopefully
+# cabal-tweak-flag ghcide-bench False
 
+%if %[v"%{ghc_version}" > v"9.12"]
+cabal-tweak-flag cabal False
+cabal-tweak-flag callHierarchy False
+%endif
+
+# redundant
 %if %[v"%{ghc_version}" < v"9.4"]
 cabal-tweak-flag hlint False
+cabal-tweak-flag stan False
 %endif
 
 %if %[v"%{ghc_version}" == v"9.10.2"]
