@@ -1,0 +1,45 @@
+From fb17921128bd56ba74872cae9539767e63b9fd79 Mon Sep 17 00:00:00 2001
+From: fendor <fendor@posteo.de>
+Date: Tue, 6 May 2025 15:16:51 +0200
+Subject: [PATCH] Allow building HLS with GHC 9.10.2
+
+---
+ ghcide/src/Development/IDE/GHC/CPP.hs         | 4 ++--
+ ghcide/src/Development/IDE/GHC/Compat/Core.hs | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/ghcide/src/Development/IDE/GHC/CPP.hs b/ghcide/src/Development/IDE/GHC/CPP.hs
+index 50421cde80..bb4c4e4e81 100644
+--- a/ghcide/src/Development/IDE/GHC/CPP.hs
++++ b/ghcide/src/Development/IDE/GHC/CPP.hs
+@@ -30,7 +30,7 @@ import qualified GHC.Driver.Pipeline.Execute     as Pipeline
+ import qualified GHC.SysTools.Cpp                as Pipeline
+ #endif
+ 
+-#if MIN_VERSION_ghc(9,11,0)
++#if MIN_VERSION_ghc(9,10,2)
+ import qualified GHC.SysTools.Tasks              as Pipeline
+ #endif
+ 
+@@ -56,7 +56,7 @@ doCpp env input_fn output_fn =
+ #if MIN_VERSION_ghc(9,5,0)
+     let cpp_opts = Pipeline.CppOpts
+                  { cppLinePragmas = True
+-#if MIN_VERSION_ghc(9,11,0)
++#if MIN_VERSION_ghc(9,10,2)
+                  , sourceCodePreprocessor = Pipeline.SCPHsCpp
+ #elif MIN_VERSION_ghc(9,10,0)
+                  , useHsCpp = True
+diff --git a/ghcide/src/Development/IDE/GHC/Compat/Core.hs b/ghcide/src/Development/IDE/GHC/Compat/Core.hs
+index 3be432bfda..3f19cd7489 100644
+--- a/ghcide/src/Development/IDE/GHC/Compat/Core.hs
++++ b/ghcide/src/Development/IDE/GHC/Compat/Core.hs
+@@ -702,7 +702,7 @@ initObjLinker env =
+ loadDLL :: HscEnv -> String -> IO (Maybe String)
+ loadDLL env str = do
+     res <- GHCi.loadDLL (GHCi.hscInterp env) str
+-#if MIN_VERSION_ghc(9,11,0) || (MIN_VERSION_ghc(9, 8, 3) && !MIN_VERSION_ghc(9, 9, 0))
++#if MIN_VERSION_ghc(9,11,0) || (MIN_VERSION_ghc(9, 8, 3) && !MIN_VERSION_ghc(9, 9, 0)) || (MIN_VERSION_ghc(9, 10, 2) && !MIN_VERSION_ghc(9, 11, 0))
+     pure $
+       case res of
+         Left err_msg -> Just err_msg

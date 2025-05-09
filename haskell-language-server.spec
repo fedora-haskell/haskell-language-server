@@ -13,6 +13,8 @@
 %bcond_without compiler_default
 %endif
 
+%global ghcide ghcide-2.10.0.0
+
 %global ghc_prefix %{?ghc_name}%{!?ghc_name:ghc}
 
 %global wrapper_pkg %[(%{defined rhel} && "%{?ghc_name}" == "ghc9.2") || (%{defined fedora} && %{undefined ghc_name})]
@@ -40,8 +42,11 @@ URL:            https://hackage.haskell.org/package/haskell-language-server
 # Begin cabal-rpm sources:
 Source0:        https://hackage.haskell.org/package/%{pkgver}/%{pkgver}.tar.gz
 # End cabal-rpm sources
+Source1:        cabal.project
 # https://github.com/haskell/haskell-language-server/issues/4359
 Patch0:         disable-ghcide-bench.patch
+Patch1:         https://github.com/haskell/haskell-language-server/commit/fb17921128bd56ba74872cae9539767e63b9fd79.patch
+
 Provides:       haskell-language-server-ghc-%{ghc_version} = %{version}-%{release}
 
 # Begin cabal-rpm deps:
@@ -466,12 +471,21 @@ Please see the README on GitHub at
 # Begin cabal-rpm setup:
 %setup -q -n %{pkgver}
 # End cabal-rpm setup
-%autopatch -p1
+%patch -P0 -p1 -b .orig
 cabal-tweak-flag dynamic False
 cabal-tweak-flag test-exe False
 
 %if %[v"%{ghc_version}" < v"9.4"]
 cabal-tweak-flag hlint False
+%endif
+
+%if %[v"%{ghc_version}" == v"9.10.2"]
+cabal update %{!?_with_compiler_default:-w ghc-%{ghc_version}}
+cabal unpack %{ghcide}
+sed -e "s/@GHCIDE@/%{ghcide}/" %{SOURCE1} > cabal.project
+( cd %{ghcide}
+  %patch -P1 -p2
+)
 %endif
 
 
