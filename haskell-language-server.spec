@@ -13,8 +13,6 @@
 %bcond_without compiler_default
 %endif
 
-%global ghcide ghcide-2.10.0.0
-
 %global ghc_prefix %{?ghc_name}%{!?ghc_name:ghc}
 
 %global wrapper_pkg %[(%{defined rhel} && "%{?ghc_name}" == "ghc9.2") || (%{defined fedora} && %{undefined ghc_name})]
@@ -33,7 +31,7 @@
 %global executable %{pkg_name}-%{ghc_version}
 
 Name:           %{pkg_name}%{?ghc_name:-%{ghc_name}}
-Version:        2.10.0.0
+Version:        2.11.0.0
 Release:        1%{?dist}.ghc%{ghc_minor}
 Summary:        LSP server for GHC %{ghc_version}
 
@@ -43,9 +41,6 @@ URL:            https://hackage.haskell.org/package/haskell-language-server
 Source0:        https://hackage.haskell.org/package/%{pkgver}/%{pkgver}.tar.gz
 # End cabal-rpm sources
 Source1:        cabal.project
-# https://github.com/haskell/haskell-language-server/issues/4359
-Patch0:         disable-ghcide-bench.patch
-Patch1:         https://github.com/haskell/haskell-language-server/commit/fb17921128bd56ba74872cae9539767e63b9fd79.patch
 
 Provides:       haskell-language-server-ghc-%{ghc_version} = %{version}-%{release}
 
@@ -172,9 +167,7 @@ BuildRequires:  ghc-uniplate-devel
 BuildRequires:  ghc-unix-compat-devel
 # for missing dep 'attoparsec-aeson':
 BuildRequires:  ghc-attoparsec-devel
-%if 0%{?fedora} >= 41
 BuildRequires:  ghc-integer-conversion-devel
-%endif
 BuildRequires:  ghc-primitive-devel
 BuildRequires:  ghc-scientific-devel
 # for missing dep 'binary-instances':
@@ -245,9 +238,7 @@ BuildRequires:  ghc-fingertree-devel
 %endif
 BuildRequires:  ghc-gitrev-devel
 BuildRequires:  ghc-haddock-library-devel
-%if 0%{?fedora} >= 41
 BuildRequires:  ghc-os-string-devel
-%endif
 BuildRequires:  ghc-parallel-devel
 %if %{defined fedora}
 BuildRequires:  ghc-prettyprinter-ansi-terminal-devel
@@ -317,9 +308,7 @@ BuildRequires:  ghc-indexed-traversable-devel
 BuildRequires:  ghc-indexed-traversable-instances-devel
 %endif
 BuildRequires:  ghc-network-uri-devel
-%if 0%{?fedora} >= 41
 BuildRequires:  ghc-quickcheck-instances-devel
-%endif
 BuildRequires:  ghc-safe-devel
 %if %{defined fedora}
 BuildRequires:  ghc-some-devel
@@ -475,30 +464,13 @@ Please see the README on GitHub at
 # Begin cabal-rpm setup:
 %setup -q -n %{pkgver}
 # End cabal-rpm setup
-%patch -P0 -p1 -b .orig
 cabal-tweak-flag dynamic False
 cabal-tweak-flag test-exe False
-# in 2.11 hopefully
-# cabal-tweak-flag ghcide-bench False
+cabal-tweak-flag ghcide-bench False
 
 %if %[v"%{ghc_version}" > v"9.12"]
-cabal-tweak-flag cabal False
-cabal-tweak-flag callHierarchy False
-%endif
-
-# redundant
-%if %[v"%{ghc_version}" < v"9.4"]
-cabal-tweak-flag hlint False
-cabal-tweak-flag stan False
-%endif
-
-%if %[v"%{ghc_version}" == v"9.10.2"]
-cabal update %{!?_with_compiler_default:-w ghc-%{ghc_version}}
-cabal unpack %{ghcide}
-sed -e "s/@GHCIDE@/%{ghcide}/" %{SOURCE1} > cabal.project
-( cd %{ghcide}
-  %patch -P1 -p2
-)
+#cabal-tweak-flag cabal False
+#cabal-tweak-flag callHierarchy False
 %endif
 
 
@@ -512,7 +484,12 @@ cabal update %{!?_with_compiler_default:-w ghc-%{ghc_version}}
 %ghc_set_gcc_flags
 # Begin cabal-rpm install
 mkdir -p %{buildroot}%{_bindir}
-cabal install %{!?_with_compiler_default:-w ghc-%{ghc_version}} --install-method=copy --enable-executable-stripping --installdir=%{buildroot}%{_bindir}
+%if %[v"%{ghc_version}" > v"9.12"]
+# seems needed for cabal-install-parser at least
+# https://github.com/haskell-CI/haskell-ci/issues/773
+%define allow_newer --allow-newer
+%endif
+cabal install %{!?_with_compiler_default:-w ghc-%{ghc_version}} --install-method=copy --enable-executable-stripping --installdir=%{buildroot}%{_bindir} %{?allow_newer}
 mv %{buildroot}%{_bindir}/{%{pkg_name},%{executable}}
 mkdir -p %{buildroot}%{_datadir}/bash-completion/completions/
 %{buildroot}%{_bindir}/%{executable} --bash-completion-script %{executable} | sed s/filenames/default/ > %{buildroot}%{_datadir}/bash-completion/completions/%{executable}
@@ -542,6 +519,9 @@ rm %{buildroot}%{_bindir}/haskell-language-server-wrapper
 
 
 %changelog
+* Sun May 25 2025 Jens Petersen <petersen@redhat.com> - 2.11.0.0-1.ghc%{ghc_minor}
+- https://hackage.haskell.org/package/haskell-language-server-2.11.0.0/changelog
+
 * Thu Apr 03 2025 Jens Petersen  <petersen@redhat.com> - 2.10.0.0-1.ghc%{ghc_minor}
 - https://hackage.haskell.org/package/haskell-language-server-2.10.0.0/changelog
 
