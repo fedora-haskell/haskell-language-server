@@ -23,17 +23,19 @@ main =
 -- https://haskell-language-server.readthedocs.io/en/latest/support/ghc-version-support.html
 -- minimum listed GHC version: 9.4
 -- 9.2 fails to build ghcide
--- 9.12 bounds for ghc-trace-event (for opentelemetry)
-defaultGHCs = [GHC, GHC9_10, GHC9_8, GHC9_6, GHC9_4]
+defaultGHCs = [GHC, GHC9_12, GHC9_10, GHC9_8, GHC9_6, GHC9_4]
 allArchs = [X86_64, AARCH64, PPC64LE]
 defaultArchs = [X86_64, AARCH64]
 
 run dryrun local reqarchs (reqbrs,reqghcs) =
   if local
-  then
-    if null reqbrs && not (null reqghcs)
-    then runLocal dryrun reqghcs
-    else error' "can't combine --local with branches"
+  then do
+    unless (null reqbrs) $
+      error' "can't combine --local with branches"
+    when (null reqbrs) $
+      error' "specify at least one ghcver"
+    -- FIXME doesn't work (branch interferes)
+    runLocal dryrun reqghcs
   else runRemote dryrun reqarchs (reqbrs,reqghcs)
 
 runRemote dryrun reqarchs (reqbrs,reqghcs) = do
@@ -41,15 +43,18 @@ runRemote dryrun reqarchs (reqbrs,reqghcs) = do
     if null reqbrs
     then do
       allbrs <- getActiveBranches
-      return $ allbrs \\ [EPEL 8, EPELNext 8, EPELNext 9, EPEL 10, EPELNext 10]
+      -- EPELMinor 10 0
+      return $ allbrs \\ [EPEL 8, EPELNext 8, EPELNext 9]
     else return reqbrs
   let ghcs = if null reqghcs then defaultGHCs else reqghcs
   forM_ branches $ \br -> do
-    defaultGhcVer <- readVersion <$> cmd "frpq" ["-q", (showBranch br), "--qf=%{version}", "--latest-limit=1", "ghc"]
-    forM_ (ghcs \\ [GHC | br == EPEL 9]) $ \ghc -> do
+    defaultGhcVer <- readVersion <$> cmd "frpq" ["-q", showBranch br, "--qf=%{version}", "--latest-limit=1", "ghc"]
+    forM_ (ghcs \\ ([GHC | br == EPEL 9] ++ [GHC9_10 | br == EPEL 9] ++ [GHC9_12 | br `elem` [Fedora 40, EPEL 9, EPEL 10]])) $
+      \ghc -> do
       putChar '\n'
       putStrLn $ "#" +-+ showBranch br +-+ showGHCPkg ghc
-      version <- readVersion <$> cmd "frpq" ["-q", (showBranch br), "--qf=%{version}", "--latest-limit=1", showGHCPkg ghc]
+      -- FIXME frpq can fail empty
+      version <- readVersion <$> cmd "frpq" ["-q", showBranch br, "--qf=%{version}", "--latest-limit=1", showGHCPkg ghc]
       if ghc /= GHC && version == defaultGhcVer
         then putStrLn $ "skipping" +-+ showGHCPkg ghc ++ '-' : showVersion version
         else do
@@ -95,7 +100,7 @@ runLocal dryrun reqghcs =
     sed ["s/%global ghc_minor .*/%global ghc_minor " ++ showVersion version ++ "/"]
     when dryrun $ error' "--local does not support --dryrun"
     -- FIXME need to unset GHC_PACKAGE_PATH
-    cmdLog_ "fbrnch" $ "local" : []
+    cmdLog_ "fbrnch" ["local"]
 
 switchGhcMajor :: GHCPKG -> IO ()
 switchGhcMajor GHC =
@@ -133,9 +138,9 @@ data GHCPKG = GHC | GHC9_12
 
 latestGHC :: GHCPKG -> Version
 latestGHC GHC9_12 = makeVersion [9,12,2]
-latestGHC GHC9_10 = makeVersion [9,10,1]
+latestGHC GHC9_10 = makeVersion [9,10,2]
 latestGHC GHC9_8 = makeVersion [9,8,4]
-latestGHC GHC9_6 = makeVersion [9,6,6] -- 9.6.7 available
+latestGHC GHC9_6 = makeVersion [9,6,7]
 latestGHC GHC9_4 = makeVersion [9,4,8]
 latestGHC GHC9_2 = makeVersion [9,2,8]
 latestGHC GHC9_0 = makeVersion [9,0,2]
