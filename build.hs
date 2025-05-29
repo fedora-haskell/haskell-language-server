@@ -78,7 +78,7 @@ runRemote dryrun reqarchs (reqbrs,reqghcs) = do
           cmdLog_ "fbrnch" $ "copr" : ["-n" | dryrun] ++ ["--single", "haskell-language-server", showBranch br] ++ map archOpt archs
         where
           maybeGHCArchs :: Branch -> GHCPKG -> Arch -> Maybe Arch
-          maybeGHCArchs branch GHC9_4 AARCH64 | branch < Fedora 41 = Nothing
+          maybeGHCArchs (EPEL 9) GHC9_4 AARCH64 = Nothing
           maybeGHCArchs (EPEL 9) GHC9_6 AARCH64 = Nothing
           maybeGHCArchs _ _ arch = Just arch
 --            if ghcs == [GHC9_4] && (length ghcs > 1 || then Nothing else Just AARCH64
