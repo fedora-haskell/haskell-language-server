@@ -467,6 +467,8 @@ Please see the README on GitHub at
 cabal-tweak-flag dynamic False
 cabal-tweak-flag test-exe False
 cabal-tweak-flag ghcide-bench False
+# https://github.com/haskell/haskell-language-server/issues/4642
+cabal-tweak-flag cabal False
 
 %if %[v"%{ghc_version}" > v"9.12"]
 #cabal-tweak-flag cabal False
