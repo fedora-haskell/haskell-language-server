@@ -1,5 +1,5 @@
 #!/usr/bin/env stack
--- stack --resolver lts-21.25 script --package=fedora-releases --package=extra --package=simple-cmd --package=simple-cmd-args
+-- stack --resolver lts-23.28 script --package=fedora-releases --package=extra --package=simple-cmd --package=simple-cmd-args
 
 import Control.Monad (forM_, unless, when)
 import Data.Either (partitionEithers)
