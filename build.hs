@@ -32,7 +32,7 @@ run dryrun local reqarchs (reqbrs,reqghcs) =
   then do
     unless (null reqbrs) $
       error' "can't combine --local with branches"
-    when (null reqbrs) $
+    when (null reqghcs) $
       error' "specify at least one ghcver"
     -- FIXME doesn't work (branch interferes)
     runLocal dryrun reqghcs
@@ -93,14 +93,14 @@ runLocal dryrun reqghcs =
     let latest = latestGHC ghc
     when (version /= latest) $
       error' $ showGHCPkg ghc ++ '-' : showVersion version +-+ "is not" +-+ showVersion latest
-    switchGhcMajor ghc
-    ghcmajor <- cmd "grep" ["%global ghc_major", specFile]
-    --putStrLn ghcmajor
-    -- FIXME check ghcmajor
-    sed ["s/%global ghc_minor .*/%global ghc_minor " ++ showVersion version ++ "/"]
-    when dryrun $ error' "--local does not support --dryrun"
-    -- FIXME need to unset GHC_PACKAGE_PATH
-    cmdLog_ "fbrnch" ["local"]
+  switchGhcMajor ghc
+  ghcmajor <- cmd "grep" ["%global ghc_major", specFile]
+  --putStrLn ghcmajor
+  -- FIXME check ghcmajor
+  sed ["s/%global ghc_minor .*/%global ghc_minor " ++ showVersion version ++ "/"]
+  when dryrun $ error' "--local does not support --dryrun"
+  -- FIXME need to unset GHC_PACKAGE_PATH
+  cmdLog_ "fbrnch" ["local"]
 
 switchGhcMajor :: GHCPKG -> IO ()
 switchGhcMajor GHC =
