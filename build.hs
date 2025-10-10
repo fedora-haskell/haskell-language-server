@@ -47,14 +47,14 @@ runRemote dryrun reqarchs (reqbrs,reqghcs) = do
       return $ allbrs \\ [EPEL 8, EPELNext 8, EPELNext 9]
     else return reqbrs
   let ghcs = if null reqghcs then defaultGHCs else reqghcs
+      frpq = "/usr/bin/frpq"
   forM_ branches $ \br -> do
-    defaultGhcVer <- readVersion <$> cmd "frpq" ["-q", showBranch br, "--qf=%{version}", "--latest-limit=1", "ghc"]
-    forM_ (ghcs \\ ([GHC | br == EPEL 9] ++ [GHC9_10 | br == EPEL 9] ++ [GHC9_12 | br `elem` [Fedora 40, EPEL 9, EPEL 10]])) $
+    defaultGhcVer <- readVersion <$> cmd frpq ["-q", showBranch br, "--qf=%{version}", "--latest-limit=1", "ghc"]
+    forM_ (ghcs \\ ([GHC | br == EPEL 9] ++ [GHC9_10 | br == EPEL 9] ++ [GHC9_12 | br == EPEL 9])) $
       \ghc -> do
       putChar '\n'
       putStrLn $ "#" +-+ showBranch br +-+ showGHCPkg ghc
-      -- FIXME frpq can fail empty
-      version <- readVersion <$> cmd "frpq" ["-q", showBranch br, "--qf=%{version}", "--latest-limit=1", showGHCPkg ghc]
+      version <- readVersion <$> cmd frpq ["-q", showBranch br, "--qf=%{version}", "--latest-limit=1", showGHCPkg ghc]
       if ghc /= GHC && version == defaultGhcVer
         then putStrLn $ "skipping" +-+ showGHCPkg ghc ++ '-' : showVersion version
         else do
