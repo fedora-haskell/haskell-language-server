@@ -21,9 +21,9 @@ main =
   <*> (partitionBranches <$> many (strArg "BRANCH... GHCMAJOR..."))
 
 -- https://haskell-language-server.readthedocs.io/en/latest/support/ghc-version-support.html
--- minimum listed GHC version: 9.4
--- 9.2 fails to build ghcide
-defaultGHCs = [GHC, GHC9_12, GHC9_10, GHC9_8, GHC9_6, GHC9_4]
+-- minimum listed GHC version: 9.6
+-- 9.4 fails to build ghcide (as of 2.12)
+defaultGHCs = [GHC, GHC9_12, GHC9_10, GHC9_8, GHC9_6]
 allArchs = [X86_64, AARCH64, PPC64LE]
 defaultArchs = [X86_64, AARCH64]
 
@@ -104,7 +104,7 @@ runLocal dryrun reqghcs =
 
 switchGhcMajor :: GHCPKG -> IO ()
 switchGhcMajor GHC =
-  sed ["s/^%global ghc_major .*/#%%global ghc_major 9.4/"]
+  sed ["s/^%global ghc_major .*/#%%global ghc_major 9.6/"]
 switchGhcMajor ghc =
   sed ["s/#%%global ghc_major/%global ghc_major/",
        "s/\\(%global ghc_major \\).*/\\1" ++ showMajor ghc ++ "/"]
