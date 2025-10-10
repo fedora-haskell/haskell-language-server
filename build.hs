@@ -50,7 +50,7 @@ runRemote dryrun reqarchs (reqbrs,reqghcs) = do
       frpq = "/usr/bin/frpq"
   forM_ branches $ \br -> do
     defaultGhcVer <- readVersion <$> cmd frpq ["-q", showBranch br, "--qf=%{version}", "--latest-limit=1", "ghc"]
-    forM_ (ghcs \\ ([GHC | br == EPEL 9] ++ [GHC9_10 | br == EPEL 9] ++ [GHC9_12 | br == EPEL 9])) $
+    forM_ (ghcs \\ ([GHC | br == EPEL 9] ++ [GHC9_10 | br == EPEL 9] ++ [GHC9_12 | br == EPEL 9 || br == Rawhide])) $
       \ghc -> do
       putChar '\n'
       putStrLn $ "#" +-+ showBranch br +-+ showGHCPkg ghc
