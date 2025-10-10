@@ -40,7 +40,7 @@ URL:            https://hackage.haskell.org/package/haskell-language-server
 # Begin cabal-rpm sources:
 Source0:        https://hackage.haskell.org/package/%{pkgver}/%{pkgver}.tar.gz
 # End cabal-rpm sources
-Source1:        cabal.project
+#Source1:        cabal.project
 
 Provides:       haskell-language-server-ghc-%{ghc_version} = %{version}-%{release}
 
