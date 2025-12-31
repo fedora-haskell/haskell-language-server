@@ -137,7 +137,7 @@ data GHCPKG = GHC | GHC9_12
   deriving Eq
 
 latestGHC :: GHCPKG -> Version
-latestGHC GHC9_12 = makeVersion [9,12,2]
+latestGHC GHC9_12 = makeVersion [9,12,3]
 latestGHC GHC9_10 = makeVersion [9,10,3]
 latestGHC GHC9_8 = makeVersion [9,8,4]
 latestGHC GHC9_6 = makeVersion [9,6,7]
