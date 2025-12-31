@@ -23,7 +23,7 @@ main =
 -- https://haskell-language-server.readthedocs.io/en/latest/support/ghc-version-support.html
 -- minimum listed GHC version: 9.6
 -- 9.4 fails to build ghcide (as of 2.12)
-defaultGHCs = [GHC, GHC9_12, GHC9_10, GHC9_8, GHC9_6]
+defaultGHCs = [GHC, GHC9_14, GHC9_12, GHC9_10, GHC9_8, GHC9_6]
 allArchs = [X86_64, AARCH64, PPC64LE]
 defaultArchs = [X86_64, AARCH64]
 
@@ -50,7 +50,7 @@ runRemote dryrun reqarchs (reqbrs,reqghcs) = do
       frpq = "/usr/bin/frpq"
   forM_ branches $ \br -> do
     defaultGhcVer <- readVersion <$> cmd frpq ["-q", showBranch br, "--qf=%{version}", "--latest-limit=1", "ghc"]
-    forM_ (ghcs \\ ([GHC | br == EPEL 9] ++ [GHC9_10 | br == EPEL 9] ++ [GHC9_12 | br == EPEL 9 || br == Rawhide])) $
+    forM_ ((if br == EPEL 9 then filter (< GHC9_10) else id) ghcs \\ ([{-GHC9_14 | br == EPEL 9-}])) $
       \ghc -> do
       putChar '\n'
       putStrLn $ "#" +-+ showBranch br +-+ showGHCPkg ghc
@@ -131,12 +131,11 @@ partitionBranches args =
 -- ghcVersion (Fedora 41) = makeVersion [9,6,6]
 -- ghcVersion Rawhide = makeVersion [9,6,6]
 
-data GHCPKG = GHC | GHC9_12
-            | GHC9_10 | GHC9_8 | GHC9_6 | GHC9_4 | GHC9_2 | GHC9_0
-            | GHC8_10
-  deriving Eq
+data GHCPKG = GHC8_10 | GHC9_0 | GHC9_2 | GHC9_4 | GHC9_6 | GHC9_8 | GHC9_10 | GHC9_12 | GHC9_14 | GHC
+  deriving (Eq,Ord)
 
 latestGHC :: GHCPKG -> Version
+latestGHC GHC9_14 = makeVersion [9,14,1]
 latestGHC GHC9_12 = makeVersion [9,12,3]
 latestGHC GHC9_10 = makeVersion [9,10,3]
 latestGHC GHC9_8 = makeVersion [9,8,4]
@@ -154,6 +153,8 @@ readGHCPkg "ghc" = GHC
 readGHCPkg ('g':'h':'c':ver) = readGHCPkg ver
 readGHCPkg ver =
   case ver of
+    "914" -> GHC9_14
+    "9.14" -> GHC9_14
     "912" -> GHC9_12
     "9.12" -> GHC9_12
     "910" -> GHC9_10
@@ -173,6 +174,7 @@ readGHCPkg ver =
     _ -> error' $ "unknown GHCVER" +-+ ver
 
 showGHCPkg GHC = "ghc"
+showGHCPkg GHC9_14 = "ghc9.14"
 showGHCPkg GHC9_12 = "ghc9.12"
 showGHCPkg GHC9_10 = "ghc9.10"
 showGHCPkg GHC9_8 = "ghc9.8"
@@ -183,6 +185,7 @@ showGHCPkg GHC9_0 = "ghc9.0"
 showGHCPkg GHC8_10 = "ghc8.10"
 
 showMajor GHC = ""
+showMajor GHC9_14 = "9.14"
 showMajor GHC9_12 = "9.12"
 showMajor GHC9_10 = "9.10"
 showMajor GHC9_8 = "9.8"
