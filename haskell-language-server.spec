@@ -480,8 +480,11 @@ cabal-tweak-flag plugin-tutorial False
 #cabal-tweak-flag cabal False
 
 %if %[v"%{ghc_version}" > v"9.12"]
-#cabal-tweak-flag cabal False
-#cabal-tweak-flag callHierarchy False
+cabal-tweak-flag fourmolu False
+cabal-tweak-flag hlint False
+# https://github.com/tweag/ormolu/issues/1187
+cabal-tweak-flag ormolu False
+cabal-tweak-flag stylish False
 %endif
 
 
