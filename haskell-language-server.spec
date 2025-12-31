@@ -51,6 +51,8 @@ Provides:       haskell-language-server-ghc-%{ghc_version} = %{version}-%{releas
 BuildRequires:  ghc-rpm-macros
 %if %{defined ghc_name}
 BuildRequires:  %{ghc_name} = %{ghc_minor}
+# explicitly needed for 9.14
+BuildRequires:  %{ghc_name}-ghc-bignum-devel
 %if %{with compiler_default}
 BuildRequires:  %{ghc_name}-compiler-default = %{ghc_minor}
 %endif
