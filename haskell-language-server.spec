@@ -5,7 +5,7 @@
 %if %{defined ghc_major}
 %global ghc_name ghc%{ghc_major}
 %endif
-%global ghc_minor 9.6.6
+%global ghc_minor 9.8.4
 %if %{defined fedora}
 %bcond_with compiler_default
 %else
@@ -31,7 +31,7 @@
 %global executable %{pkg_name}-%{ghc_version}
 
 Name:           %{pkg_name}%{?ghc_name:-%{ghc_name}}
-Version:        2.12.0.0
+Version:        2.13.0.0
 Release:        1%{?dist}.ghc%{ghc_minor}
 Summary:        LSP server for GHC %{ghc_version}
 
@@ -41,8 +41,6 @@ URL:            https://hackage.haskell.org/package/haskell-language-server
 Source0:        https://hackage.haskell.org/package/%{pkgver}/%{pkgver}.tar.gz
 # End cabal-rpm sources
 #Source1:        cabal.project
-# https://github.com/haskell/haskell-language-server/pull/4738
-Patch0:         https://github.com/haskell/haskell-language-server/pull/4738.patch
 
 Provides:       haskell-language-server-ghc-%{ghc_version} = %{version}-%{release}
 
@@ -110,7 +108,6 @@ BuildRequires:  ghc-lens-aeson-devel
 #BuildRequires:  ghc-lsp-devel
 #BuildRequires:  ghc-lsp-test-devel
 #BuildRequires:  ghc-lsp-types-devel
-BuildRequires:  ghc-markdown-unlit-devel
 BuildRequires:  ghc-megaparsec-devel
 #BuildRequires:  ghc-mod-devel
 BuildRequires:  ghc-mtl-devel
@@ -144,7 +141,6 @@ BuildRequires:  ghc-stm-devel
 #BuildRequires:  ghc-stm-containers-devel
 #BuildRequires:  ghc-stylish-haskell-devel
 BuildRequires:  ghc-syb-devel
-BuildRequires:  ghc-tasty-hunit-devel
 BuildRequires:  ghc-template-haskell-devel
 BuildRequires:  ghc-temporary-devel
 BuildRequires:  ghc-text-devel
@@ -158,6 +154,7 @@ BuildRequires:  ghc-unliftio-core-devel
 BuildRequires:  ghc-unordered-containers-devel
 BuildRequires:  ghc-vector-devel
 BuildRequires:  ghc-yaml-devel
+#BuildRequires:  markdown-unlit
 # hls --version output includes (buildroot) path
 #BuildRequires:  help2man
 BuildRequires:  cabal-install
@@ -165,6 +162,7 @@ BuildRequires:  cabal-install
 BuildRequires:  ghc-HsYAML-devel
 BuildRequires:  ghc-scientific-devel
 # for missing dep 'apply-refact':
+BuildRequires:  ghc-data-default-class-devel
 %if %{defined fedora}
 BuildRequires:  ghc-filemanip-devel
 %endif
@@ -217,6 +215,7 @@ BuildRequires:  ghc-MemoTrie-devel
 BuildRequires:  ghc-ansi-terminal-devel
 BuildRequires:  ghc-file-embed-devel
 BuildRequires:  ghc-scientific-devel
+BuildRequires:  ghc-terminal-size-devel
 %if %{defined fedora} || %{defined el10}
 BuildRequires:  ghc-th-env-devel
 %endif
@@ -231,18 +230,12 @@ BuildRequires:  ghc-QuickCheck-devel
 BuildRequires:  ghc-generic-lens-core-devel
 %endif
 BuildRequires:  ghc-profunctors-devel
-# for missing dep 'ghc-exactprint':
-BuildRequires:  ghc-free-devel
-BuildRequires:  ghc-ordered-containers-devel
-# for missing dep 'generic-lens-core':
-%if 0%{?fedora} >= 42
-BuildRequires:  ghc-indexed-profunctors-devel
-%endif
 # for missing dep 'ghcide':
 BuildRequires:  ghc-Glob-devel
 BuildRequires:  ghc-base16-bytestring-devel
 BuildRequires:  ghc-case-insensitive-devel
 BuildRequires:  ghc-cryptohash-sha1-devel
+BuildRequires:  ghc-edit-distance-devel
 %if 0%{?fedora} >= 42
 BuildRequires:  ghc-enummapset-devel
 %endif
@@ -280,6 +273,7 @@ BuildRequires:  ghc-js-flot-devel
 BuildRequires:  ghc-js-jquery-devel
 # for missing dep 'hls-test-utils':
 BuildRequires:  ghc-tasty-devel
+BuildRequires:  ghc-tasty-hunit-devel
 BuildRequires:  ghc-tasty-rerun-devel
 # for missing dep 'hw-prim':
 BuildRequires:  ghc-mmap-devel
@@ -341,8 +335,6 @@ BuildRequires:  ghc-primitive-devel
 %if %{defined fedora} || %{defined el10}
 BuildRequires:  ghc-text-short-devel
 %endif
-# for missing dep 'process-extras':
-BuildRequires:  ghc-generic-deriving-devel
 # for missing dep 'random-shuffle':
 %if %{defined fedora}
 BuildRequires:  ghc-MonadRandom-devel
@@ -364,6 +356,8 @@ BuildRequires:  ghc-haskell-src-exts-devel
 # for missing dep 'row-types':
 BuildRequires:  ghc-constraints-devel
 BuildRequires:  ghc-profunctors-devel
+# for missing dep 'sorted-list':
+BuildRequires:  ghc-QuickCheck-devel
 # for missing dep 'sqlite-simple':
 %if %{defined fedora} || %{defined el10}
 BuildRequires:  ghc-Only-devel
@@ -472,7 +466,7 @@ Please see the README on GitHub at
 %prep
 # Begin cabal-rpm setup:
 %setup -q -n %{pkgver}
-%autopatch
+#%%autopatch
 # End cabal-rpm setup
 cabal-tweak-flag dynamic False
 cabal-tweak-flag test-exe False
@@ -535,34 +529,37 @@ rm %{buildroot}%{_bindir}/haskell-language-server-wrapper
 
 
 %changelog
-* Fri Oct 10 2025 Jens Petersen <petersen@redhat.com> - 2.12.0.0-1.ghc%{ghc_minor}
-- https://hackage.haskell.org/package/haskell-language-server-2.14.0.0/changelog
+* Sat Jan 17 2026 Jens Petersen <petersen@redhat.com> - 2.13.0.0-1
+- https://hackage.haskell.org/package/haskell-language-server-2.13.0.0/changelog
 
-* Sun May 25 2025 Jens Petersen <petersen@redhat.com> - 2.11.0.0-1.ghc%{ghc_minor}
+* Fri Oct 10 2025 Jens Petersen <petersen@redhat.com> - 2.12.0.0-1
+- https://hackage.haskell.org/package/haskell-language-server-2.12.0.0/changelog
+
+* Sun May 25 2025 Jens Petersen <petersen@redhat.com> - 2.11.0.0-1
 - https://hackage.haskell.org/package/haskell-language-server-2.11.0.0/changelog
 
-* Thu Apr 03 2025 Jens Petersen  <petersen@redhat.com> - 2.10.0.0-1.ghc%{ghc_minor}
+* Thu Apr 03 2025 Jens Petersen  <petersen@redhat.com> - 2.10.0.0-1
 - https://hackage.haskell.org/package/haskell-language-server-2.10.0.0/changelog
 
-* Fri Jul 12 2024 Jens Petersen <petersen@redhat.com> - 2.9.0.0-1.ghc%{ghc_minor}
+* Fri Jul 12 2024 Jens Petersen <petersen@redhat.com> - 2.9.0.0-1
 - https://hackage.haskell.org/package/haskell-language-server-2.9.0.0/changelog
 
-* Fri Jul 12 2024 Jens Petersen <petersen@redhat.com> - 2.8.0.0-1.ghc%{ghc_minor}
+* Fri Jul 12 2024 Jens Petersen <petersen@redhat.com> - 2.8.0.0-1
 - https://hackage.haskell.org/package/haskell-language-server-2.8.0.0/changelog
 
-* Thu Mar 28 2024 Jens Petersen <petersen@redhat.com> - 2.7.0.0-1.ghc%{ghc_minor}
+* Thu Mar 28 2024 Jens Petersen <petersen@redhat.com> - 2.7.0.0-1
 - https://hackage.haskell.org/package/haskell-language-server-2.7.0.0/changelog
 
-* Fri Jan 19 2024 Jens Petersen <petersen@redhat.com> - 2.6.0.0-1.ghc%{ghc_minor}
+* Fri Jan 19 2024 Jens Petersen <petersen@redhat.com> - 2.6.0.0-1
 - https://hackage.haskell.org/package/haskell-language-server-2.6.0.0/changelog
 
-* Mon Dec 11 2023 Jens Petersen <petersen@redhat.com> - 2.5.0.0-1.ghc%{ghc_minor}
+* Mon Dec 11 2023 Jens Petersen <petersen@redhat.com> - 2.5.0.0-1
 - https://hackage.haskell.org/package/haskell-language-server-2.5.0.0/changelog
 
-* Fri Nov 24 2023 Jens Petersen <petersen@redhat.com> - 2.4.0.0-3.ghc%{ghc_minor}
+* Fri Nov 24 2023 Jens Petersen <petersen@redhat.com> - 2.4.0.0-3
 - build wrapper with ghc9.2 for before Fedora 38 (ie ghc-8.10.7 releases)
 
-* Thu Nov 23 2023 Jens Petersen <petersen@redhat.com> - 2.4.0.0-2.ghc%{ghc_minor}
+* Thu Nov 23 2023 Jens Petersen <petersen@redhat.com> - 2.4.0.0-2
 - add ghc minor version suffix to release
 
 * Sun Oct 22 2023 Jens Petersen <petersen@redhat.com> - 2.4.0.0-1
