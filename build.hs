@@ -123,14 +123,6 @@ partitionBranches :: [String] -> ([Branch],[GHCPKG])
 partitionBranches args =
   fmap (map readGHCPkg) . swap . partitionEithers $ map eitherBranch args
 
--- ghcVersion :: Branch -> Version
--- ghcVersion (EPEL 9) = makeVersion [8,10,7]
--- ghcVersion (Fedora 38) = makeVersion [9,2,6]
--- ghcVersion (Fedora 39) = makeVersion [9,4,5]
--- ghcVersion (Fedora 40) = makeVersion [9,4,5]
--- ghcVersion (Fedora 41) = makeVersion [9,6,6]
--- ghcVersion Rawhide = makeVersion [9,6,6]
-
 data GHCPKG = GHC8_10 | GHC9_0 | GHC9_2 | GHC9_4 | GHC9_6 | GHC9_8 | GHC9_10 | GHC9_12 | GHC9_14 | GHC
   deriving (Eq,Ord)
 
