@@ -115,7 +115,9 @@ BuildRequires:  ghc-optparse-applicative-devel
 %if %{defined fedora} || %{defined el10}
 BuildRequires:  ghc-optparse-simple-devel
 %endif
+%if 0%{?fedora} < 44
 BuildRequires:  ghc-ormolu-devel
+%endif
 BuildRequires:  ghc-parser-combinators-devel
 BuildRequires:  ghc-pretty-devel
 %if %{defined fedora} || %{defined el10}
@@ -216,7 +218,7 @@ BuildRequires:  ghc-ansi-terminal-devel
 BuildRequires:  ghc-file-embed-devel
 BuildRequires:  ghc-scientific-devel
 BuildRequires:  ghc-terminal-size-devel
-%if %{defined fedora} || %{defined el10}
+%if 0%{?fedora} < 44
 BuildRequires:  ghc-th-env-devel
 %endif
 # for missing dep 'fuzzy':
@@ -305,7 +307,9 @@ BuildRequires:  ghc-indexed-traversable-devel
 BuildRequires:  ghc-indexed-traversable-instances-devel
 %endif
 BuildRequires:  ghc-network-uri-devel
+%if 0%{?fedora} < 44
 BuildRequires:  ghc-quickcheck-instances-devel
+%endif
 BuildRequires:  ghc-safe-devel
 %if %{defined fedora} || %{defined el10}
 BuildRequires:  ghc-some-devel
@@ -325,7 +329,7 @@ BuildRequires:  ghc-psqueues-devel
 BuildRequires:  ghc-exceptions-devel
 # for missing dep 'primitive-extras':
 BuildRequires:  ghc-cereal-devel
-%if %{defined fedora} || %{defined el10}
+%if 0%{?fedora} < 44
 BuildRequires:  ghc-deferred-folds-devel
 %endif
 BuildRequires:  ghc-primitive-devel
@@ -384,7 +388,7 @@ BuildRequires:  ghc-relude-devel
 %endif
 BuildRequires:  ghc-scientific-devel
 # for missing dep 'stm-containers':
-%if %{defined fedora}
+%if 0%{?fedora} < 44
 BuildRequires:  ghc-deferred-folds-devel
 # for missing dep 'stm-hamt':
 BuildRequires:  ghc-deferred-folds-devel
