@@ -128,7 +128,7 @@ data GHCPKG = GHC8_10 | GHC9_0 | GHC9_2 | GHC9_4 | GHC9_6 | GHC9_8 | GHC9_10 | G
 
 latestGHC :: GHCPKG -> Version
 latestGHC GHC9_14 = makeVersion [9,14,1]
-latestGHC GHC9_12 = makeVersion [9,12,3]
+latestGHC GHC9_12 = makeVersion [9,12,4]
 latestGHC GHC9_10 = makeVersion [9,10,3]
 latestGHC GHC9_8 = makeVersion [9,8,4]
 latestGHC GHC9_6 = makeVersion [9,6,7]
